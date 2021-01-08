@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: "NanumBarunGothic";
+    src: url("../font/NanumBarunGothic.ttf");
+ }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'NanumBarunGothic';
+}
+
+input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
+button {
+    border: none;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.messageBox {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    top: 30px;
+}
