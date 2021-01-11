@@ -14,7 +14,6 @@ class Register extends common
 		$this->load->model('member_model');
 		$this->load->model('auth_model');
 		$this->load->helper('cookie');
-		$this->load->helper('password');
 	}
 
 	public function view()

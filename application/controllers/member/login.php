@@ -10,9 +10,7 @@ class Login extends common
 	{
 		parent::__construct();
 		isLogin();
-		$this->load->library('form_validation');
 		$this->load->model('member_model');
-		$this->load->helper('password');
 	}
 
 	public function view()

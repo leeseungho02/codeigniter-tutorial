@@ -10,8 +10,6 @@ class Post extends common
 	{
         parent::__construct();
         $this->load->model('post_model');
-        $this->load->helper('password');
-        $this->load->library('form_validation');
     }
 
     // 목록

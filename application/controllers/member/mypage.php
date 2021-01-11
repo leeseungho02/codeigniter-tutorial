@@ -9,7 +9,6 @@ class Mypage extends common
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->library('form_validation');
 		$this->load->model('member_model');
         $this->load->model('auth_model');
     }

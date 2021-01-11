@@ -10,7 +10,9 @@ class common extends CI_Controller
 
 		$this->load->database();
 		$this->load->library('session');
+		$this->load->library('form_validation');
 		$this->load->helper('url');
+		$this->load->helper('password');
 		$this->load->helper('common');
 	}
 
