@@ -21,6 +21,16 @@ class Post extends common
         $this->load->library('pagination');
     }
 
+    // redirect php vs js
+    // https://www.edureka.co/community/74742/which-is-best-window-location-js-header-php-for-redirection
+    // https://stackoverflow.com/questions/15655017/window-location-js-vs-header-php-for-redirection
+
+    // search
+    // https://stackoverflow.com/questions/14374188/search-data-in-codeigniter
+
+    // pagenation
+    // https://www.guru99.com/codeigniter-pagination.html
+
     // 목록
     public function index($page = 0)
     {
