@@ -14,8 +14,7 @@ class Post_model extends common_model
         $post = array(
             "title" => $this->input->post("title"),
             "content" => $this->input->post("content"),
-            "type" => $this->input->post("type"),
-            "create_dt" => createNow()
+            "type" => $this->input->post("type")
         );
         return $post;
     }

@@ -31,13 +31,14 @@ class Post extends common
         $run = $this->form_validation->run();
 		if ($run) {
             $data = $this->post_model->makePostFromInput($this->input);
+            $data["create_dt"] = createNow();
             $member = $this->session->userdata('member');
             if($member){
                 $data["writer"] = $member->id;
             }
 
             $pid = $this->post_model->insert("posts", $data);
-            movePage();
+            movePage("post");
         }
 
         $this->pageView("post/insert");
@@ -53,5 +54,29 @@ class Post extends common
             movePage("/");
         }
         $this->pageView("post/view", $datas);
+    }
+
+    // 글 수정
+    public function update($id = 0)
+    {
+        $where = array("id" => $id);
+        $post = $this->post_model->fetch("posts", $where);
+        if(!$post){
+            movePage("/");
+        }
+
+        $this->form_validation->set_rules("title", "제목", "required");
+        $this->form_validation->set_rules("content", "내용", "required");
+        $this->form_validation->set_rules("type", "타입", "required");
+
+        $run = $this->form_validation->run();
+		if ($run) {
+            $data = $this->post_model->makePostFromInput($this->input);
+            $data["update_dt"] = createNow();
+            $this->post_model->update("posts", $data, $where);
+            movePage("post/view/" . $id);
+        }
+
+        $this->pageView("post/update", $post);
     }
 }
