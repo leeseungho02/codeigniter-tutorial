@@ -32,9 +32,14 @@ class Register extends common
 		$run = $this->form_validation->run();
 		if ($run) {
 			$member = $this->member_model->makeMemberFromInput($this->input);
-			$uid = $this->member_model->insert($member);
 			$code = $this->auth_model->isCode();
-
+			$data = array(
+				"code" => $code,
+				"issu" => "이메일 인증 코드 발급",
+				"time" => 180,
+				"uid" => $this->member_model->insert($member),
+				"create_at" => createNow()
+			);
 			$cookie = array(
 				'name'   => 'emailCode',
 				'value'  => $code,
@@ -44,9 +49,9 @@ class Register extends common
 			);
 
 			set_cookie($cookie);
-
-			$this->auth_model->insert($code, '이메일 인증 코드 발급', 180, $uid);
+			$this->auth_model->insert("authInfo", $data);
 			$this->auth_model->setMessage('회원가입에 성공했습니다.');
+			
 			redirect('/member/register/auth');
 		}
 

@@ -18,4 +18,15 @@ class Post_model extends common_model
         );
         return $post;
     }
+
+    // 현재 글 가져오기
+    function getPost($id)
+    {
+        $post = $this->post_model->fetch("posts", array("id" => $id));
+        if (!$post) {
+            movePage();
+        }
+
+        return $post;
+    }
 }

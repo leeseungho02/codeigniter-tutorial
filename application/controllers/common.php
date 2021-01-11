@@ -14,7 +14,6 @@ class common extends CI_Controller
 		$this->load->helper('common');
 	}
 
-
 	public function pageView($body_template, $data = null)
 	{
 		$this->load->view('template/header');

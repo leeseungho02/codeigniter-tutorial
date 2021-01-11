@@ -16,6 +16,10 @@ function movePage($url = "") {
     echo "<script> window.location.href = '/index.php/$url'; </script>";
 }
 
+function backPage() {
+    echo "<script> window.history.back(); </script>";
+}
+
 function createNow() {
     return date('Y-m-d H:i:s');
 }

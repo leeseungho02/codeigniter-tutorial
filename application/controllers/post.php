@@ -47,22 +47,21 @@ class Post extends common
     // 글 상세보기
     public function view($id = 0)
     {
-        $where = array("id" => $id);
-        $this->post_model->updatePlus("posts", "hit", $where);
-        $datas['post'] = $this->post_model->fetch("posts", $where);
-        if(!$datas['post']){
-            movePage("/");
-        }
+        $this->post_model->updatePlus("posts", "hit", array("id" => $id));
+
+        $datas['post'] = $this->post_model->getPost($id);
+
         $this->pageView("post/view", $datas);
     }
 
     // 글 수정
     public function update($id = 0)
     {
-        $where = array("id" => $id);
-        $post = $this->post_model->fetch("posts", $where);
-        if(!$post){
-            movePage("/");
+        $post = $this->post_model->getPost($id);
+        $member = $this->session->userdata('member');
+        
+        if (!$member || $post->writer != $member->id) {
+            backPage();
         }
 
         $this->form_validation->set_rules("title", "제목", "required");
@@ -73,10 +72,23 @@ class Post extends common
 		if ($run) {
             $data = $this->post_model->makePostFromInput($this->input);
             $data["update_dt"] = createNow();
-            $this->post_model->update("posts", $data, $where);
+            $this->post_model->update("posts", $data, array("id" => $id));
             movePage("post/view/" . $id);
         }
 
         $this->pageView("post/update", $post);
+    }
+
+    // 글 삭제
+    public function delete($id = 0)
+    {
+        $post = $this->post_model->getPost($id);
+        $member = $this->session->userdata('member');
+
+        if (!$member || $post->writer != $member->id) {
+            backPage();
+        }
+
+        $this->post_model->update("posts", array("pdelete" => 1), array("id" => $id));
     }
 }

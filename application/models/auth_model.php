@@ -35,14 +35,4 @@ class auth_model extends common_model
         }
         return $code;
     }
-
-    function insert($code, $issu, $time, $uid)
-    {
-        $this->db->set('code', $code);
-        $this->db->set('issu', $issu);
-        $this->db->set('time', $time);
-        $this->db->set('uid', $uid);
-        $this->db->set('create_at', createNow());
-        $this->db->insert('authInfo');
-    }
 }
