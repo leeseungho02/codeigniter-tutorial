@@ -67,7 +67,7 @@ class Register extends common
 
 			$data = array("email_code_status" => true);
 			$where = array("id" => $auth->uid);
-			$this->member_model->update($data, $where);
+			$this->member_model->update("members", $data, $where);
 			$this->auth_model->setMessage('인증되셨습니다.');
 			redirect("member/login/view");
 		}

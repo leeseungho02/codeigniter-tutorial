@@ -71,7 +71,7 @@ class Login extends common
 			$pw = $this->member_model->makeHashPassword($this->input->post("pw"));
 			$data = array("pw" => $pw, "prev_pw" => $member->pw);
 			$where = array("id" => $member->id);
-			$this->member_model->update($data, $where);
+			$this->member_model->update("members", $data, $where);
 			redirect("member/login/view");
 		}
 

@@ -12,6 +12,10 @@ function isLogin() {
     }
 }
 
-function movePage($url) {
+function movePage($url = "") {
     echo "<script> window.location.href = '/index.php/$url'; </script>";
+}
+
+function createNow() {
+    return date('Y-m-d H:i:s');
 }

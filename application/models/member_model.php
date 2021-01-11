@@ -22,18 +22,6 @@ class Member_model extends common_model
         return $this->fetch("members", $data);
     }
 
-    // 회원 추가
-    function insert($data)
-    {
-        $this->db->insert('members', $data);
-        return $this->db->insert_id();
-    }
-
-    function update($data, $where)
-    {
-        $this->db->update('members', $data, $where);
-    }
-
     // 
     function makeHashPassword($password) {
         return password_hash($password, PASSWORD_BCRYPT);
