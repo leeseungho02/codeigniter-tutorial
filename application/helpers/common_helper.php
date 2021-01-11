@@ -11,3 +11,7 @@ function isLogin() {
         redirect('/');
     }
 }
+
+function movePage($url) {
+    echo "<script> window.location.href = '/index.php/$url'; </script>";
+}

@@ -50,7 +50,7 @@ class Login extends common
 			if (!$member) {
 				$this->member_model->setMessage('존재하지 않은 이메일입니다.');
 			}
-			redirect("member/login/passwordUpdate/" . $member->id);
+			movePage("member/login/passwordUpdate/" . $member->id);
 		}
 
 		$this->pageView('member/passwordFind');

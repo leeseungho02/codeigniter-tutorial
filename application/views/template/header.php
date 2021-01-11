@@ -13,7 +13,7 @@
 <body>
 
 	<?php if ($this->session->userdata('member')) { ?>
-		<a href="/index.php">메인페이지</a>
+		<a href="/index.php/post/insert">글작성</a>
 		<a href="/index.php/member/mypage/logout">로그아웃</a>
 	<?php } ?>
 
