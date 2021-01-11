@@ -19,6 +19,20 @@ class Post_model extends common_model
         return $post;
     }
 
+    function getPosts($limit, $start)
+    {
+        $query = $this->db->select('*')->from('posts')->order_by('pid DESC, porder ASC, depth DESC')->limit($limit, $start)->get();
+        return $query->result();
+    }
+
+    function getPostsCount()
+    {
+        $this->db->select('*');
+        $this->db->from('posts');
+        $this->db->where("pdelete = false");
+        return $this->db->count_all_results();
+    }
+
     // 현재 글 가져오기
     function getPost($id)
     {

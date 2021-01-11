@@ -34,9 +34,8 @@
 
             <div class="uk-margin-bottom">
                 <label class="uk-form-label">첨부파일</label>
-                <div class="uk-form-controls" uk-form-custom="target: true">
-                    <input type="file" name="file">
-                    <input class="uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
+                <div class="uk-form-controls">
+                    <input type="file" name="userFile">
                 </div>
                 <?= form_error("file", '<div class="error uk-margin-small-top">', '</div>') ?>
             </div>

@@ -11,6 +11,7 @@
     </div>
 
     <div class="uk-margin-top uk-flex uk-flex-right">
+        <a href="/index.php/post/insert/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right">답글작성</a>
         <a href="/index.php/post/update/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right">수정</a>
         <a href="/index.php/post/delete/<?= $post->id ?>" class="uk-button uk-button-danger">삭제</a>
     </div>

@@ -18,3 +18,7 @@
         <?php } ?>
     </tbody>
 </table>
+
+<div class="uk-flex uk-flex-center">
+    <?= $this->pagination->create_links(); ?>
+</div>
