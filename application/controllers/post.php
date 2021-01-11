@@ -10,6 +10,7 @@ class Post extends common
 	{
         parent::__construct();
         $this->load->model('post_model');
+        $this->load->model('comment_model');
     }
 
     // 목록
@@ -48,6 +49,7 @@ class Post extends common
         $this->post_model->updatePlus("posts", "hit", array("id" => $id));
 
         $datas['post'] = $this->post_model->getPost($id);
+        $datas['comments'] = $this->comment_model->fetchAll("SELECT c.*, m.name FROM comments c LEFT JOIN members m ON c.writer = m.id");
 
         $this->pageView("post/view", $datas);
     }
