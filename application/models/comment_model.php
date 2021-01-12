@@ -12,7 +12,8 @@ class Comment_model extends common_model
     // 해당 글의 모든 댓글 가져오기
     function getComments($id)
     {
-        $query = $this->db->select('comments.*, ifnull(members.name, comments.non_member_id) name')->from('comments')->where("pid", $id)->
+        $where = array("pid" => $id, "cdelete" => false);
+        $query = $this->db->select('comments.*, ifnull(members.name, comments.non_member_id) name')->from('comments')->where($where)->
         join("members", "comments.writer = members.id", "left")->get();
         return $query->result();
     }
@@ -21,7 +22,11 @@ class Comment_model extends common_model
     function getComment($id)
     {
         $comment = $this->fetch("comments", array("id" => $id));
-        if (!$comment) backPage();
+        
+        if (!$comment) {
+            backPage();
+        }
+
         return $comment;
     }
 }

@@ -59,8 +59,18 @@ class Comment extends common
             );
 
             $this->comment_model->update("comments", $data, array("id" => $id));
-            
+
             movePage("post/view/" . $comment->pid);
         }
+    }
+
+    // 댓글 삭제
+    public function delete($id = 0)
+    {
+        $comment = $this->comment_model->getComment($id);
+
+        $this->comment_model->update("comments", array("cdelete" => 1), array("id" => $id));
+
+        movePage("post/view/" . $comment->pid);
     }
 }
