@@ -6,6 +6,23 @@
 
         <div>
 
+            <?php if (!$this->session->userdata('member')) { ?>
+                <div class="uk-margin-bottom">
+                    <label class="uk-form-label">비회원 아이디</label>
+                    <div class="uk-form-controls">
+                        <input name="non_member_id" id="non_member_id" placeholder="비회원 아이디를 입력해주세요." class="uk-input"></input>
+                        <?= form_error("non_member_id", '<div class="error uk-margin-small-top">', '</div>') ?>
+                    </div>
+                </div>
+                <div class="uk-margin-bottom">
+                    <label class="uk-form-label">비회원 비밀번호</label>
+                    <div class="uk-form-controls">
+                        <input name="non_member_pw" id="non_member_pw" placeholder="비회원 비밀번호를 입력해주세요." class="uk-input"></input>
+                        <?= form_error("non_member_pw", '<div class="error uk-margin-small-top">', '</div>') ?>
+                    </div>
+                </div>
+            <?php } ?>
+
             <div class="uk-margin-bottom">
                 <label class="uk-form-label">제목</label>
                 <div class="uk-form-controls">

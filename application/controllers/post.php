@@ -41,7 +41,7 @@ class Post extends common
         $keyword = "";
         $type = "title";
         $this->form_validation->set_rules("keyword", "검색어", "required");
-        
+
         $run = $this->form_validation->run();
         if ($run) {
             $type = $this->input->post("type");
@@ -61,17 +61,25 @@ class Post extends common
     // 글 작성
     public function insert($id = 0)
     {
+        $member = $this->session->userdata('member');
+
         $this->form_validation->set_rules("title", "제목", "required");
         $this->form_validation->set_rules("content", "내용", "required");
         $this->form_validation->set_rules("type", "타입", "required");
+        if (!$member) {
+            $this->form_validation->set_rules("non_member_id", "비회원 아이디", "required");
+            $this->form_validation->set_rules("non_member_pw", "비회원 비밀번호", "required");
+        }
 
         $run = $this->form_validation->run();
         if ($run) {
             $data = $this->post_model->makePostFromInput($this->input);
             $data["create_dt"] = createNow();
-            $member = $this->session->userdata('member');
             if ($member) {
                 $data["writer"] = $member->id;
+            } else {
+                $data["non_member_id"] = $this->input->post("non_member_id");
+                $data["non_member_pw"] = $this->input->post("non_member_pw");
             }
 
             if ($id != 0) {
@@ -118,6 +126,12 @@ class Post extends common
         $datas['post'] = $this->post_model->getPost($id);
         $datas['files'] = $this->post_model->getPostFiles($id);
         $datas['comments'] = $this->comment_model->getComments($id);
+
+        // 비밀글 권한
+        if ($datas['post']->type == "private" && $datas['post']->writer != $this->session->userdata('member')->id) {
+            $this->post_model->setMessage('비밀글은 해당 작성자만 읽기가 가능합니다.');
+            backPage();
+        }
 
         $this->pageView("post/view", $datas);
     }

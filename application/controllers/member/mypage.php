@@ -44,10 +44,9 @@ class Mypage extends common
             array_splice($member, 0, 1);
             $member['prev_pw'] = $this->input->post('prev_pw');
 
-            if ($member['prev_pw'] == $member['pw']) {
+            if (password_verify($this->input->post("pw"), $member['prev_pw'])) {
                 $this->member_model->setMessage('이전 비밀번호와 같습니다.');
                 backPage();
-                exit;
             }
 
             $this->member_model->update("members", $member, array("id" => $id));

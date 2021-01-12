@@ -30,7 +30,7 @@ class Post_model extends common_model
             $this->db->like($type, $keyword);
         }
 
-        $query = $this->db->order_by('pid DESC, porder ASC, depth DESC')->limit($limit, $start)->get();
+        $query = $this->db->order_by('type ASC, pid DESC, porder ASC, depth DESC')->limit($limit, $start)->get();
         return $query->result();
     }
 
