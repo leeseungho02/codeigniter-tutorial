@@ -15,7 +15,6 @@ class Register extends common
 		$this->load->model('member_model');
 		$this->load->model('auth_model');
 
-		$this->load->helper('cookie');
 		$this->load->helper('regex');
 	}
 
@@ -33,44 +32,38 @@ class Register extends common
 		$run = $this->form_validation->run();
 		if ($run) {
 			$member = $this->member_model->makeMemberFromInput($this->input);
-			$code = $this->auth_model->isCode();
-			$data = array(
-				"code" => $code,
-				"issu" => "이메일 인증 코드 발급",
-				"time" => 180,
-				"uid" => $this->member_model->insert("members", $member),
-				"create_dt" => createNow()
-			);
-
-			set_cookie(array(
-				'name'   => 'emailCode',
-				'value'  => $code,
-				'expire' => '180',
-				'path'   => '/',
-				'prefix' => 'myprefix_'
-			));
+			$uid = $this->member_model->insert("members", $member);
+			$data = $this->auth_model->makeCodeData("이메일 인증 코드 발급", $uid);
 
 			$this->auth_model->insert("authInfo", $data);
 			$this->auth_model->setMessage('회원가입에 성공했습니다.', 'success');
 
-			movePage('/member/register/auth');
+			movePage('member/register/auth/register');
 		}
 
 		$this->pageView('member/register');
 	}
 
-	public function auth()
+	public function auth($type = "")
 	{
 		$this->form_validation->set_rules('code', '인증번호', 'required');
 
 		$run = $this->form_validation->run();
 		if ($run) {
 			$auth = $this->auth_model->getCode($this->input->post("code"));
+			if (!$auth) {
+				$this->member_model->setMessage('인증번호가 일치하지 않습니다.');
+				backPage();
+			}
 
-			$this->member_model->update("members", array("email_code_status" => true), array("id" => $auth->uid));
-			$this->auth_model->setMessage('인증되셨습니다.', 'success');
+			$this->auth_model->setMessage('인증 하셨습니다.', 'success');
 
-			movePage("member/login/view");
+			if ($type == "register") {
+				$this->member_model->update("members", array("email_code_status" => true), array("id" => $auth->uid));
+				movePage("member/login/view");
+			} else if ($type == "passwordFind") {
+				movePage("member/login/passwordUpdate/" . $auth->uid);
+			}
 		}
 
 		$this->pageView('member/auth');

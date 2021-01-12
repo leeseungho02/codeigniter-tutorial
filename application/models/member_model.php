@@ -26,6 +26,16 @@ class Member_model extends common_model
             backPage();
         }
 
+        if (!$member->email_code_status) {
+            $this->member_model->setMessage('이메일 인증 후 이용 가능합니다.');
+            movePage("member/register/auth");
+        }
+
+        if ($member->mdelete) {
+            $this->member_model->setMessage('탈퇴한 회원입니다. 계정 복구하실려면 관리자에게 문의하세요.');
+            backPage();
+        }
+
         return $member;
     }
 

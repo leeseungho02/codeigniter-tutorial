@@ -13,6 +13,7 @@ class Login extends common
 		$this->isLogin();
 
 		$this->load->model('member_model');
+		$this->load->model('auth_model');
 	}
 
 	public function view()
@@ -25,24 +26,9 @@ class Login extends common
 			$member = $this->member_model->getMember(array('email' => $this->input->post('email')));
 			$pw = $this->input->post('pw');
 
-			if (!$member) {
-				$this->member_model->setMessage('존재하지 않은 아이디 입니다.');
-				backPage();
-			}
-
-			if ($member->mdelete) {
-				$this->member_model->setMessage('탈퇴한 회원입니다. 계정 복구하실려면 관리자에게 문의하세요.');
-				backPage();
-			}
-
-			if (!$member->email_code_status) {
-				$this->member_model->setMessage('이메일 인증 후 이용 가능합니다.');
-				movePage("member/register/auth");
-			}
-
 			if (password_verify($pw, $member->prev_pw)) {
-				$this->member_model->setMessage('예전 비밀번호를 입력하셨습니다. 새로운 비밀번호로 변경해주세요.');
-				movePage("member/login/passwordUpdate/" . $member->id);
+				$this->member_model->setMessage('예전 비밀번호를 입력하셨습니다.');
+				backPage();
 			}
 
 			if (!password_verify($pw, $member->pw)) {
@@ -65,7 +51,11 @@ class Login extends common
 		$run = $this->form_validation->run();
 		if ($run) {
 			$member = $this->member_model->getMember(array('email' => $this->input->post('email')));
-			movePage("member/login/passwordUpdate/" . $member->id);
+			$data = $this->auth_model->makeCodeData("비밀번호 찾기 인증 코드 발급", $member->id);
+
+			$this->auth_model->insert("authInfo", $data);
+
+			movePage("member/register/auth/passwordFind");
 		}
 
 		$this->pageView('member/passwordFind');

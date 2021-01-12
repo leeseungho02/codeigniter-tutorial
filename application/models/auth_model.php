@@ -45,4 +45,15 @@ class auth_model extends common_model
 
         return $auth;
     }
+
+    function makeCodeData($issu, $uid)
+    {
+        return array(
+            "code" => $this->isCode(),
+            "issu" => $issu,
+            "time" => 180,
+            "uid" => $uid,
+            "create_dt" => createNow()
+        );
+    }
 }
