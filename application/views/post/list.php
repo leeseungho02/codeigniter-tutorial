@@ -12,7 +12,16 @@
                 <td>
                     <a href="/index.php/post/view/<?= $post->id ?>"><?= $key + 1 ?></a>
                 </td>
-                <td><?= $post->content ?></td>
+                <td>
+                    <?php for ($i = 0; $i < $post->depth; $i++) {  ?>
+                        &nbsp; RE:
+                    <?php } ?>
+                    <?php if ($post->pdelete) { ?>
+                        삭제된 글입니다.
+                    <?php } else { ?>
+                        <?= $post->content ?>
+                    <?php } ?>
+                </td>
                 <td><?= $post->create_dt ?></td>
             </tr>
         <?php } ?>

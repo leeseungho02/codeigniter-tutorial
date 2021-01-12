@@ -99,6 +99,7 @@ class Post extends common
         $this->post_model->updatePlus("posts", "hit", array("id" => $id));
 
         $datas['post'] = $this->post_model->getPost($id);
+        $datas['files'] = $this->post_model->getPostFiles($id);
         $datas['comments'] = $this->comment_model->getComments($id);
 
         $this->pageView("post/view", $datas);
@@ -140,5 +141,8 @@ class Post extends common
         }
 
         $this->post_model->update("posts", array("pdelete" => 1), array("id" => $id));
+        $this->comment_model->update("comments", array("cdelete" => 1), array("pid" => $id));
+
+        movePage("post/index");
     }
 }

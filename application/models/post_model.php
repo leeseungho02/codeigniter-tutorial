@@ -23,26 +23,33 @@ class Post_model extends common_model
     // 모든 글 가져오기
     function getPosts($limit, $start)
     {
-        $query = $this->db->select('*')->from('posts')->where("pdelete = false")->
-        order_by('pid DESC, porder ASC, depth DESC')->limit($limit, $start)->get();
+        $query = $this->db->select('*')->from('posts')->order_by('pid DESC, porder ASC, depth DESC')->limit($limit, $start)->get();
         return $query->result();
     }
 
     // 삭제되지 않은 모든 글 갯수
     function getPostsCount()
     {
-        $this->db->select('*')->from('posts')->where("pdelete = false");
+        $this->db->select('*')->from('posts');
         return $this->db->count_all_results();
     }
 
     // 현재 글 가져오기
     function getPost($id)
     {
-        $post = $this->post_model->fetch("posts", array("id" => $id));
-        if (!$post) {
-            movePage();
+        $post = $this->fetch("posts", array("id" => $id));
+
+        if (!$post || $post->pdelete) {
+            movePage("post");
         }
 
         return $post;
+    }
+
+    // 해당 글의 모든 첨부파일 가져오기
+    function getPostFiles($pid)
+    {
+        $query = $this->db->select('*')->from('posts_files')->where(array("pid" => $pid))->get();
+        return $query->result();
     }
 }
