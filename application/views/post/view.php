@@ -68,16 +68,43 @@
                     </div>
                 </div>
             </header>
-            <div class="uk-comment-body">
-                <p><?= $comment->content ?></p>
+
+            <div class="view">
+                <div class="uk-comment-body">
+                    <p><?= $comment->content ?></p>
+                </div>
+
+                <div class="uk-margin-top">
+                    <a href="#" class="uk-button uk-button-default uk-margin-right updateLink">수정</a>
+                    <a href="/index.php/comment/delete/<?= $comment->id ?>" class="uk-button uk-button-danger">삭제</a>
+                </div>
             </div>
 
-            <div class="uk-margin-top">
-                <a href="/index.php/comment/update/<?= $comment->id ?>" class="uk-button uk-button-default uk-margin-right">수정</a>
-                <a href="/index.php/comment/delete/<?= $comment->id ?>" class="uk-button uk-button-danger">삭제</a>
-            </div>
+            <form action="/index.php/comment/update" method="POST" class="form uk-form-stacked d-none">
+                <input type="hidden" name="id" value="<?= $comment->id ?>">
+                <div class="uk-margin-bottom">
+                    <label class="uk-form-label">내용</label>
+                    <div class="uk-form-controls">
+                        <input type="content" name="content" id="content" class="uk-input" value="<?= $comment->content ?>">
+                        <?= form_error("content", '<div class="error uk-margin-small-top">', '</div>') ?>
+                    </div>
+                </div>
+                <div class="uk-flex uk-flex-right uk-flex-middle">
+                    <button type="submit" class="uk-button uk-button-default">글 수정</button>
+                </div>
+            </form>
 
         </article>
     <?php } ?>
 
 </div>
+
+<script>
+    document.querySelectorAll(".updateLink").forEach(el => {
+        el.addEventListener("click", (e) => {
+            let parent = e.currentTarget.parentElement.parentElement.parentElement;
+            parent.querySelector(".d-none").classList.remove("d-none");
+            parent.querySelector(".view").classList.add("d-none");
+        });
+    });
+</script>

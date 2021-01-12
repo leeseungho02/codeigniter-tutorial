@@ -33,3 +33,11 @@ a {
     transform: translate(-50%);
     top: 30px;
 }
+
+.d-none {
+    display: none;
+}
+
+.d-block {
+    display: block;
+}

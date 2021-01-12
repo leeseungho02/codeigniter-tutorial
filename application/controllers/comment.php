@@ -12,7 +12,7 @@ class Comment extends common
         $this->load->model('comment_model');
     }
 
-    // 글 작성
+    // 댓글 작성
     public function insert()
     {
         $member = $this->session->userdata('member');
@@ -31,7 +31,7 @@ class Comment extends common
                 "create_dt" => createNow(),
                 "pid" => $pid
             );
-            
+
             if ($member) {
                 $data["writer"] = $member->id;
             } else {
@@ -41,6 +41,26 @@ class Comment extends common
 
             $this->comment_model->insert("comments", $data);
             movePage("post/view/" . $pid);
+        }
+    }
+
+    // 댓글 수정
+    public function update()
+    {
+        $this->form_validation->set_rules("content", "내용", "required");
+
+        $run = $this->form_validation->run();
+        if ($run) {
+            $id = $this->input->post("id");
+            $comment = $this->comment_model->getComment($id);
+            $data = array(
+                "content" => $this->input->post("content"),
+                "update_dt" => createNow()
+            );
+
+            $this->comment_model->update("comments", $data, array("id" => $id));
+            
+            movePage("post/view/" . $comment->pid);
         }
     }
 }
