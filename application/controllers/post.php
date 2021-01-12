@@ -21,7 +21,6 @@ class Post extends common
         $this->load->library('pagination');
 
         $this->upload->initialize(getUploadInit());
-        $this->pagination->initialize(getPaginationInit($this->item, $this->post_model->getPostsCount()));
     }
 
     // redirect php vs js
@@ -37,7 +36,25 @@ class Post extends common
     // 목록
     public function index($page = 0)
     {
-        $datas['posts'] = $this->post_model->getPosts($this->item, $page);
+        $posts = $this->post_model->getPosts($this->item, $page);
+        $total_count = $this->post_model->getPostsCount();
+        $keyword = "";
+        $type = "title";
+        $this->form_validation->set_rules("keyword", "검색어", "required");
+        
+        $run = $this->form_validation->run();
+        if ($run) {
+            $type = $this->input->post("type");
+            $keyword = $this->input->post("keyword");
+            $posts = $this->post_model->getPosts($this->item, $page, $type, $keyword);
+            $total_count = $this->post_model->getPostsCount($type, $keyword);
+        }
+
+        $datas['keyword'] = $keyword;
+        $datas['type'] = $type;
+        $datas['posts'] = $posts;
+        $this->pagination->initialize(getPaginationInit($this->item, $total_count));
+
         $this->pageView("post/list", $datas);
     }
 

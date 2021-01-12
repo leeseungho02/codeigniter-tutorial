@@ -21,16 +21,29 @@ class Post_model extends common_model
     }
 
     // 모든 글 가져오기
-    function getPosts($limit, $start)
+    function getPosts($limit, $start, $type = "", $keyword = "")
     {
-        $query = $this->db->select('*')->from('posts')->order_by('pid DESC, porder ASC, depth DESC')->limit($limit, $start)->get();
+        $this->db->select('*')->from('posts');
+
+        // 검색어가 있을 때
+        if ($type != "" && $keyword != "") {
+            $this->db->like($type, $keyword);
+        }
+
+        $query = $this->db->order_by('pid DESC, porder ASC, depth DESC')->limit($limit, $start)->get();
         return $query->result();
     }
 
     // 삭제되지 않은 모든 글 갯수
-    function getPostsCount()
+    function getPostsCount($type = "", $keyword = "")
     {
         $this->db->select('*')->from('posts');
+
+        // 검색어가 있을 때
+        if ($type != "" && $keyword != "") {
+            $this->db->like($type, $keyword);
+        }
+
         return $this->db->count_all_results();
     }
 
