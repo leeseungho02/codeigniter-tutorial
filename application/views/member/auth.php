@@ -6,7 +6,7 @@
         <div class="uk-margin-bottom">
             <label class="uk-form-label">인증번호</label>
             <div class="uk-form-controls">
-                <input type="code" name="code" id="code" placeholder="인증번호를 입력해주세요." class="uk-input" value="">
+                <input type="text" name="code" id="code" placeholder="인증번호를 입력해주세요." class="uk-input" value="">
                 <?= form_error("code", '<div class="error uk-margin-small-top">', '</div>') ?>
             </div>
         </div>

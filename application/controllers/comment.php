@@ -9,7 +9,10 @@ class Comment extends common
     public function __construct()
     {
         parent::__construct();
+
         $this->load->model('comment_model');
+
+        $this->load->helper('regex');
     }
 
     // 댓글 작성
@@ -20,7 +23,8 @@ class Comment extends common
         $this->form_validation->set_rules("content", "내용", "required");
         if (!$member) {
             $this->form_validation->set_rules("non_member_id", "비회원 아이디", "required");
-            $this->form_validation->set_rules("non_member_pw", "비회원 비밀번호", "required");
+            $this->form_validation->set_rules("non_member_pw", "비회원 비밀번호", "required|regex_check");
+            $this->form_validation->set_message('regex_check', '영문 대소문자, 숫자, 특수문자 중 2종류 조합 8글자이상 20글자이하');
         }
 
         $run = $this->form_validation->run();
@@ -40,6 +44,7 @@ class Comment extends common
             }
 
             $this->comment_model->insert("comments", $data);
+            $this->comment_model->setMessage('댓글 작성 하셨습니다.', 'success');
             movePage("post/view/" . $pid);
         }
     }
@@ -59,6 +64,7 @@ class Comment extends common
             );
 
             $this->comment_model->update("comments", $data, array("id" => $id));
+            $this->comment_model->setMessage('해당 댓글 수정 하셨습니다.', 'success');
 
             movePage("post/view/" . $comment->pid);
         }
@@ -70,6 +76,7 @@ class Comment extends common
         $comment = $this->comment_model->getComment($id);
 
         $this->comment_model->update("comments", array("cdelete" => 1), array("id" => $id));
+        $this->comment_model->setMessage('해당 댓글 삭제 하셨습니다.', 'success');
 
         movePage("post/view/" . $comment->pid);
     }

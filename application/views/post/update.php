@@ -9,7 +9,7 @@
             <div class="uk-margin-bottom">
                 <label class="uk-form-label">제목</label>
                 <div class="uk-form-controls">
-                    <input type="title" name="title" id="title" placeholder="제목을 입력해주세요." class="uk-input" value="<?= $title ?>">
+                    <input type="text" name="title" id="title" placeholder="제목을 입력해주세요." class="uk-input" value="<?= $title ?>">
                     <?= form_error("title", '<div class="error uk-margin-small-top">', '</div>') ?>
                 </div>
             </div>

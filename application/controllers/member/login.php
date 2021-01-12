@@ -9,7 +9,9 @@ class Login extends common
 	public function __construct()
 	{
 		parent::__construct();
-		isLogin();
+
+		$this->isLogin();
+
 		$this->load->model('member_model');
 	}
 
@@ -20,11 +22,11 @@ class Login extends common
 
 		$run = $this->form_validation->run();
 		if ($run) {
-			$member = $this->member_model->get(array('email' => $this->input->post('email')));
+			$member = $this->member_model->getMember(array('email' => $this->input->post('email')));
 			$pw = $this->input->post('pw');
 
 			if (!$member) {
-				$this->member_model->setMessage('존재하지 않은 아이디거나 비밀번호 입니다.');
+				$this->member_model->setMessage('존재하지 않은 아이디 입니다.');
 				backPage();
 			}
 
@@ -38,11 +40,14 @@ class Login extends common
 				movePage("member/login/passwordUpdate/" . $member->id);
 			}
 
-			if ($member && password_verify($pw, $member->pw)) {
-				$this->session->set_userdata('member', $member);
-				$this->member_model->setMessage('로그인 하셨습니다.');
-				movePage();
+			if (!password_verify($pw, $member->pw)) {
+				$this->member_model->setMessage('비밀번호가 일치하지 않습니다.');
+				backPage();
 			}
+
+			$this->session->set_userdata('member', $member);
+			$this->member_model->setMessage('로그인 하셨습니다.', 'success');
+			movePage();
 		}
 
 		$this->pageView('member/login');
@@ -54,10 +59,7 @@ class Login extends common
 
 		$run = $this->form_validation->run();
 		if ($run) {
-			$member = $this->member_model->get(array('email' => $this->input->post('email')));
-			if (!$member) {
-				$this->member_model->setMessage('존재하지 않은 이메일입니다.');
-			}
+			$member = $this->member_model->getMember(array('email' => $this->input->post('email')));
 			movePage("member/login/passwordUpdate/" . $member->id);
 		}
 
@@ -66,21 +68,25 @@ class Login extends common
 
 	public function passwordUpdate($uid = 0)
 	{
-		$member = $this->member_model->get(array("id" => $uid));
-		if (!$member) {
-			$this->member_model->setMessage('존재하지 않은 이메일입니다.');
-		}
+		$member = $this->member_model->getMember(array("id" => $uid));
 
 		$this->form_validation->set_rules('pw', '새 비밀번호', 'required');
 		$this->form_validation->set_rules('pw_check', '새 비밀번호 확인', 'required|matches[pw]');
 
 		$run = $this->form_validation->run();
 		if ($run) {
-			$pw = $this->member_model->makeHashPassword($this->input->post("pw"));
-			$data = array("pw" => $pw, "prev_pw" => $member->pw);
-			$where = array("id" => $member->id);
-			$this->member_model->update("members", $data, $where);
-			redirect("member/login/view");
+			$inputPW = $this->input->post("pw");
+			$pw = $this->member_model->makeHashPassword($inputPW);
+
+			if (password_verify($inputPW, $member->pw)) {
+				$this->member_model->setMessage('입력하신 비밀번호는 기존 비밀번호입니다.');
+				backPage();
+			}
+
+			$this->member_model->update("members", array("pw" => $pw, "prev_pw" => $member->pw), array("id" => $member->id));
+			$this->member_model->setMessage('새로운 비밀번호로 변경하셨습니다.', 'success');
+
+			movePage("member/login/view");
 		}
 
 		$this->pageView('member/passwordUpdate');

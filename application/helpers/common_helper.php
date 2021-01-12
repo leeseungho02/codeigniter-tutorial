@@ -1,32 +1,20 @@
 <?php
 
-function isNotLogin()
-{
-    if (!isset($_SESSION['member'])) {
-        redirect('/member/login');
-    }
-}
-
-function isLogin()
-{
-    if (isset($_SESSION['member'])) {
-        // $this->member_model->setMessage('존재하지 않은 아이디거나 비밀번호 입니다.');
-        redirect('/');
-    }
-}
-
+// 해당 주소로 이동
 function movePage($url = "")
 {
     echo "<script> window.location.href = '/index.php/$url'; </script>";
     exit;
 }
 
+// 이전 페이지로 이동
 function backPage()
 {
     echo "<script> window.history.back(); </script>";
     exit;
 }
 
+// 현재 시각 생성
 function createNow()
 {
     return date('Y-m-d H:i:s');

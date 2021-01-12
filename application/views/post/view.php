@@ -44,14 +44,14 @@
                 <div class="uk-margin-bottom">
                     <label class="uk-form-label">비회원 아이디</label>
                     <div class="uk-form-controls">
-                        <input name="non_member_id" id="non_member_id" placeholder="비회원 아이디를 입력해주세요." class="uk-input"></input>
+                        <input type="text" name="non_member_id" id="non_member_id" placeholder="비회원 아이디를 입력해주세요." class="uk-input"></input>
                         <?= form_error("non_member_id", '<div class="error uk-margin-small-top">', '</div>') ?>
                     </div>
                 </div>
                 <div class="uk-margin-bottom">
                     <label class="uk-form-label">비회원 비밀번호</label>
                     <div class="uk-form-controls">
-                        <input name="non_member_pw" id="non_member_pw" placeholder="비회원 비밀번호를 입력해주세요." class="uk-input"></input>
+                        <input type="text" name="non_member_pw" id="non_member_pw" placeholder="비회원 비밀번호를 입력해주세요." class="uk-input"></input>
                         <?= form_error("non_member_pw", '<div class="error uk-margin-small-top">', '</div>') ?>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                 <div class="uk-margin-bottom">
                     <label class="uk-form-label">내용</label>
                     <div class="uk-form-controls">
-                        <input type="content" name="content" id="content" class="uk-input" value="<?= $comment->content ?>">
+                        <input type="text" name="content" id="content" class="uk-input" value="<?= $comment->content ?>">
                         <?= form_error("content", '<div class="error uk-margin-small-top">', '</div>') ?>
                     </div>
                 </div>

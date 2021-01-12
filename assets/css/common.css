@@ -41,3 +41,17 @@ a {
 .d-block {
     display: block;
 }
+
+.message {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    transition: opacity .6s, top .6s;
+    top: 30px;
+    opacity: 1;
+}
+
+.message.hide {
+    top: -100px;
+    opacity: 0;
+}

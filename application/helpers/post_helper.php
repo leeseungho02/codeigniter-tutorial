@@ -15,5 +15,6 @@ function getPaginationInit($per_page, $total_rows)
     $config['base_url'] = 'http://localhost/index.php/post/index';
     $config['total_rows'] = $total_rows;
     $config['per_page'] = $per_page;
+    $config['use_page_numbers'] = TRUE;
     return $config;
 }

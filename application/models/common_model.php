@@ -19,12 +19,14 @@ class common_model extends CI_Model
         return $this->db->get_where($table, $data)->row();
     }
 
+    // 추가
     function insert($table, $data)
     {
         $this->db->insert($table, $data);
         return $this->db->insert_id();
     }
 
+    // 변경
     function update($table, $data, $where)
     {
         $this->db->update($table, $data, $where);
@@ -37,8 +39,11 @@ class common_model extends CI_Model
         $this->db->update($table);
     }
 
-    function setMessage($message)
+    // success : 초록 성공
+    // danger : 빨강 실패
+    function setMessage($message, $type = "danger")
     {
         $this->session->set_flashdata('message', $message);
+        $this->session->set_flashdata('message_type', $type);
     }
 }
