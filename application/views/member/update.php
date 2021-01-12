@@ -23,6 +23,14 @@
         </div>
 
         <div class="uk-margin-bottom">
+            <label class="uk-form-label">비밀번호 확인</label>
+            <div class="uk-form-controls">
+                <input type="password" name="pw_check" id="pw_check" placeholder="한 번 더 입력해주세요." class="uk-input">
+                <?= form_error("pw_check", '<div class="error uk-margin-small-top">', '</div>') ?>
+            </div>
+        </div>
+
+        <div class="uk-margin-bottom">
             <label class="uk-form-label">이름</label>
             <div class="uk-form-controls">
                 <input type="text" name="name" id="name" placeholder="이름을 입력해주세요." class="uk-input" value="<?= $this->session->userdata('member')->name; ?>" />

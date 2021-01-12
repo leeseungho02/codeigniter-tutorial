@@ -35,6 +35,11 @@ class Login extends common
 				backPage();
 			}
 
+			if (!$member->email_code_status) {
+				$this->member_model->setMessage('이메일 인증 후 이용 가능합니다.');
+				movePage("member/register/auth");
+			}
+
 			if (password_verify($pw, $member->prev_pw)) {
 				$this->member_model->setMessage('예전 비밀번호를 입력하셨습니다. 새로운 비밀번호로 변경해주세요.');
 				movePage("member/login/passwordUpdate/" . $member->id);
