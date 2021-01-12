@@ -9,6 +9,7 @@ class Post_model extends common_model
         parent::__construct();
     }
 
+    // DB에 들어갈 배열 생성
     function makePostFromInput()
     {
         $post = array(
@@ -19,17 +20,18 @@ class Post_model extends common_model
         return $post;
     }
 
+    // 모든 글 가져오기
     function getPosts($limit, $start)
     {
-        $query = $this->db->select('*')->from('posts')->order_by('pid DESC, porder ASC, depth DESC')->limit($limit, $start)->get();
+        $query = $this->db->select('*')->from('posts')->where("pdelete = false")->
+        order_by('pid DESC, porder ASC, depth DESC')->limit($limit, $start)->get();
         return $query->result();
     }
 
+    // 삭제되지 않은 모든 글 갯수
     function getPostsCount()
     {
-        $this->db->select('*');
-        $this->db->from('posts');
-        $this->db->where("pdelete = false");
+        $this->db->select('*')->from('posts')->where("pdelete = false");
         return $this->db->count_all_results();
     }
 

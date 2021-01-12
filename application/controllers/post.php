@@ -6,19 +6,22 @@ require_once(APPPATH . 'controllers/common.php');
 
 class Post extends common
 {
+    private $item = 10;
+
     public function __construct()
     {
         parent::__construct();
+
         $this->load->model('post_model');
         $this->load->model('comment_model');
 
-        $config['upload_path'] = './uploads/';
-        $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size'] = '10240';
-        $config['overwrite'] = true;
-        $config['encrypt_name'] = true;
-        $this->load->library('upload', $config);
+        $this->load->helper('post');
+
+        $this->load->library('upload');
         $this->load->library('pagination');
+
+        $this->upload->initialize(getUploadInit());
+        $this->pagination->initialize(getPaginationInit($this->item, $this->post_model->getPostsCount()));
     }
 
     // redirect php vs js
@@ -34,14 +37,7 @@ class Post extends common
     // 목록
     public function index($page = 0)
     {
-        $prePage = 10;
-        $config['base_url'] = 'http://localhost/index.php/post/index';
-        $config['total_rows'] = $this->post_model->getPostsCount();
-        $config['per_page'] = $prePage;
-        $this->pagination->initialize($config);
-
-        $datas['posts'] = $this->post_model->getPosts($prePage, $page);
-
+        $datas['posts'] = $this->post_model->getPosts($this->item, $page);
         $this->pageView("post/list", $datas);
     }
 
@@ -99,10 +95,11 @@ class Post extends common
     // 글 상세보기
     public function view($id = 0)
     {
+        // 조회 수 증가
         $this->post_model->updatePlus("posts", "hit", array("id" => $id));
 
         $datas['post'] = $this->post_model->getPost($id);
-        $datas['comments'] = $this->comment_model->fetchAll("SELECT c.*, m.name FROM comments c LEFT JOIN members m ON c.writer = m.id");
+        $datas['comments'] = $this->comment_model->getComments($id);
 
         $this->pageView("post/view", $datas);
     }
