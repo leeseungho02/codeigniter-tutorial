@@ -14,13 +14,17 @@ class Register extends common
 		$this->load->model('member_model');
 		$this->load->model('auth_model');
 		$this->load->helper('cookie');
+		$this->load->helper('regex');
 	}
 
 	public function view()
 	{
 		$this->form_validation->set_rules('email', '이메일 주소', 'required|valid_email|is_unique[members.email]');
 		$this->form_validation->set_rules('name', '이름', 'required|min_length[2]|max_length[8]');
-		$this->form_validation->set_rules('pw', '비밀번호', 'required|callback_regex_check',
+		$this->form_validation->set_rules(
+			'pw',
+			'비밀번호',
+			'required|callback_regex_check',
 			array('regex_check' => '영문 대소문자, 숫자, 특수문자 중 2종류 조합 8글자이상 20글자이하')
 		);
 		$this->form_validation->set_rules('postcodify_postcode5', '우편번호', 'required');
@@ -50,7 +54,7 @@ class Register extends common
 			set_cookie($cookie);
 			$this->auth_model->insert("authInfo", $data);
 			$this->auth_model->setMessage('회원가입에 성공했습니다.');
-			
+
 			redirect('/member/register/auth');
 		}
 
@@ -66,7 +70,7 @@ class Register extends common
 			$code = $this->input->post("code");
 			$auth = $this->auth_model->get(array('code' => $code));
 			if (!$auth) {
-				$this->auth_model->setMessage('인증번호가 일치하지 않습니다.');	
+				$this->auth_model->setMessage('인증번호가 일치하지 않습니다.');
 			}
 
 			$data = array("email_code_status" => true);

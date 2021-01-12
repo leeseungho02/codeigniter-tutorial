@@ -3,11 +3,13 @@
 <div class="parentForm">
 
     <form method="POST" class="form uk-form-stacked">
+        <input type="hidden" name="id" value="<?= $this->session->userdata('member')->id ?>">
+        <input type="hidden" name="prev_pw" value="<?= $this->session->userdata('member')->pw ?>">
 
         <div class="uk-margin-bottom">
             <label class="uk-form-label">이메일</label>
             <div class="uk-form-controls">
-                <input type="email" name="email" id="email" placeholder="이메일을 입력해주세요." class="uk-input" value="<?= $this->session->userdata('member')->email; ?>" />
+                <input type="email" name="email" id="email" placeholder="이메일을 입력해주세요." class="uk-input" value="<?= $this->session->userdata('member')->email; ?>" readonly />
                 <?= form_error("email", '<div class="error uk-margin-small-top">', '</div>') ?>
             </div>
         </div>
