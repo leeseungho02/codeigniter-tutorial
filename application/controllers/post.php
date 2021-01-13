@@ -10,6 +10,7 @@ class Post extends common
     {
         parent::__construct();
 
+        $this->load->model('member_model');
         $this->load->model('post_model');
         $this->load->model('comment_model');
 
@@ -74,7 +75,7 @@ class Post extends common
                 $data["writer"] = $member->id;
             } else {
                 $data["non_member_id"] = $this->input->post("non_member_id");
-                $data["non_member_pw"] = $this->input->post("non_member_pw");
+                $data["non_member_pw"] = $this->member_model->makeHashPassword($this->input->post("non_member_pw"));
             }
 
             // 답글 작성 시
@@ -129,12 +130,6 @@ class Post extends common
         $datas['post'] = $this->post_model->getPost($id);
         $datas['files'] = $this->post_model->getPostFiles($id);
         $datas['comments'] = $this->comment_model->getComments($id);
-
-        // 비밀글 권한
-        // if ($datas['post']->type == "private" && $datas['post']->writer != $this->session->userdata('member')->id) {
-        //     $this->post_model->setMessage('비밀글은 해당 작성자만 읽기가 가능합니다.');
-        //     backPage();
-        // }
 
         $this->pageView("post/view", $datas);
     }

@@ -22,12 +22,12 @@
             </div>
 
             <div class="uk-margin-bottom">
-                <a href="/index.php/member/login/passwordFind" class="passwordFind">비밀번호를 잊어버리셨나요?</a>
+                <a href="/member/login/passwordFind" class="passwordFind">비밀번호를 잊어버리셨나요?</a>
             </div>
         </div>
 
         <div class="uk-flex uk-flex-right uk-flex-middle">
-            <a href="/index.php/member/register/view" class="uk-button uk-button-default uk-margin-right">회원가입</a>
+            <a href="/member/register/view" class="uk-button uk-button-default uk-margin-right">회원가입</a>
             <button type="submit" class="uk-button uk-button-default">로그인</button>
         </div>
 

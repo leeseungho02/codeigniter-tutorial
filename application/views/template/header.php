@@ -16,20 +16,40 @@
 
 	<div id="header">
 
-		<a href="/index.php/post">글 목록</a>
-		<a href="/index.php/post/insert">글작성</a>
+		<nav class="uk-navbar-container uk-padding uk-padding-remove-vertical" uk-navbar>
 
-		<?php if ($this->session->userdata('member')) { ?>
-			<a href="/index.php/member/mypage/update">회원수정</a>
-			<a href="/index.php/member/mypage/delete">회원탈퇴</a>
-			<a href="/index.php/member/mypage/logout">로그아웃</a>
-		<?php } ?>
+			<div class="uk-navbar-left">
+
+				<ul class="uk-navbar-nav">
+					<li><a href="/">메인페이지</a></li>
+					<li><a href="/post">글 목록</a></li>
+					<li><a href="/post/insert">글작성</a></li>
+				</ul>
+
+			</div>
+
+			<div class="uk-navbar-right">
+
+				<ul class="uk-navbar-nav">
+					<?php if ($this->session->userdata('member')) { ?>
+						<li><a href="/member/mypage/update">회원수정</a></li>
+						<li><a href="/member/mypage/delete">회원탈퇴</a></li>
+						<li><a href="/member/mypage/logout">로그아웃</a></li>
+					<?php } else { ?>
+						<li><a href="/member/register/view">회원가입</a></li>
+						<li><a href="/member/login/view">로그인</a></li>
+					<?php } ?>
+				</ul>
+
+			</div>
+
+		</nav>
 
 	</div>
 
 	<?php if ($this->session->flashdata("message")) { ?>
 		<div class="uk-alert-<?= $this->session->flashdata("message_type") ?> message" uk-alert>
-			<a class="uk-alert-close" uk-close></a>	
+			<a class="uk-alert-close" uk-close></a>
 			<p class="uk-margin-right"><?= $this->session->flashdata("message"); ?></p>
 		</div>
 	<?php } ?>

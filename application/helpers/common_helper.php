@@ -3,7 +3,7 @@
 // 해당 주소로 이동
 function movePage($url = "")
 {
-    echo "<script> window.location.href = '/index.php/$url'; </script>";
+    echo "<script> window.location.href = '/$url'; </script>";
     exit;
 }
 

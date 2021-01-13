@@ -45,7 +45,7 @@
                 <?php foreach ($files as $key => $file) { ?>
                     <dt class="uk-flex uk-flex-between uk-flex-middle">
                         <?= $file->original_name ?>
-                        <a href="/index.php/post/fileDelete/<?= $file->id ?>" class="uk-button uk-button-default">삭제</a>
+                        <a href="/post/fileDelete/<?= $file->id ?>" class="uk-button uk-button-default">삭제</a>
                     </dt>
                 <?php } ?>
             </dl>

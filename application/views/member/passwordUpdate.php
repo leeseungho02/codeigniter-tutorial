@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="uk-flex uk-flex-right uk-margin-small-top">
-            <a href="/index.php/member/login/view" class="uk-button uk-button-default uk-margin-small-right">취소</a>
+            <a href="/member/login/view" class="uk-button uk-button-default uk-margin-small-right">취소</a>
             <button type="submit" class="uk-button uk-button-default">비밀번호변경</button>
         </div>
     </form>

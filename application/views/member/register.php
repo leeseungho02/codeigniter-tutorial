@@ -73,7 +73,7 @@
         </script>
 
         <div class="uk-flex uk-flex-between uk-flex-middle">
-            <a href="/index.php/member/login/view" class="passwordFind">이미 계정이 있으신가요?</a>
+            <a href="/member/login/view" class="passwordFind">이미 계정이 있으신가요?</a>
             <button type="submit" class="uk-button uk-button-default">회원가입</button>
         </div>
 

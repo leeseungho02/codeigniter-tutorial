@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-     RewriteBase /
+    RewriteBase /
     RewriteCond $1 !^(index\.php|images|robots\.txt|css|js|assets)
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d

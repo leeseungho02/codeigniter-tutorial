@@ -4,7 +4,7 @@ function updateModal(dom) {
     form.addEventListener("submit", (e) => {
         e.preventDefault();
         const formData = new FormData(form);
-        ajax("/index.php/post/writerCheck", "POST", formData, function (data) {
+        ajax("/post/writerCheck", "POST", formData, function (data) {
             data = JSON.parse(data);
             if (data) {
                 dom.querySelector(".d-none").classList.remove("d-none");
@@ -55,7 +55,7 @@ function deleteModal(url) {
     form.addEventListener("submit", (e) => {
         e.preventDefault();
         const formData = new FormData(form);
-        ajax("/index.php/post/writerCheck", "POST", formData, function (data) {
+        ajax("/post/writerCheck", "POST", formData, function (data) {
             data = JSON.parse(data);
             if (data) {
                 form.reset();
@@ -123,7 +123,7 @@ function postListClick(e) {
             form.addEventListener("submit", (e) => {
                 e.preventDefault();
                 const formData = new FormData(form);
-                ajax("/index.php/post/writerCheck", "POST", formData, function (data) {
+                ajax("/post/writerCheck", "POST", formData, function (data) {
                     data = JSON.parse(data);
                     if (data) {
                         form.reset();

@@ -19,16 +19,16 @@
     </div>
 
     <div class="uk-margin-top uk-flex uk-flex-right">
-        <a href="/index.php/post" class="uk-button uk-button-default uk-margin-right">목록</a>
-        <a href="/index.php/post/insert/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right">답글작성</a>
-        <a href="#" data-writer="<?= $post->writer ?>" data-url="/index.php/post/update/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right postLink">수정</a>
-        <a href="#" data-writer="<?= $post->writer ?>" data-url="/index.php/post/delete/<?= $post->id ?>" class="uk-button uk-button-danger postLink">삭제</a>
+        <a href="/post" class="uk-button uk-button-default uk-margin-right">목록</a>
+        <a href="/post/insert/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right">답글작성</a>
+        <a href="#" data-writer="<?= $post->writer ?>" data-url="/post/update/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right postLink">수정</a>
+        <a href="#" data-writer="<?= $post->writer ?>" data-url="/post/delete/<?= $post->id ?>" class="uk-button uk-button-danger postLink">삭제</a>
     </div>
 </div>
 
 <div style="padding: 100px;">
 
-    <form action="/index.php/comment/insert" method="POST" class="form uk-form-stacked">
+    <form action="/comment/insert" method="POST" class="form uk-form-stacked">
         <input type="hidden" name="pid" id="pid" value="<?= $post->id ?>">
         <div>
 
@@ -86,11 +86,11 @@
                 <div class="uk-margin-top">
                     <a href="#" class="uk-button uk-button-default uk-margin-right commentUpdateLink" data-writer="<?= $comment->writer ?>">수정</a>
                     <a href="#" class="uk-button uk-button-danger commentDeleteLink" data-writer="<?= $comment->writer ?>"
-                    data-url="/index.php/comment/delete/<?= $comment->id ?>">삭제</a>
+                    data-url="/comment/delete/<?= $comment->id ?>">삭제</a>
                 </div>
             </div>
 
-            <form action="/index.php/comment/update" method="POST" class="form uk-form-stacked d-none">
+            <form action="/comment/update" method="POST" class="form uk-form-stacked d-none">
                 <input type="hidden" name="id" value="<?= $comment->id ?>">
                 <div class="uk-margin-bottom">
                     <label class="uk-form-label">내용</label>

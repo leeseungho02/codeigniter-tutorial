@@ -10,6 +10,7 @@ class Comment extends common
     {
         parent::__construct();
 
+        $this->load->model('member_model');
         $this->load->model('comment_model');
 
         $this->load->helper('regex');
@@ -40,7 +41,7 @@ class Comment extends common
                 $data["writer"] = $member->id;
             } else {
                 $data["non_member_id"] = $this->input->post("non_member_id");
-                $data["non_member_pw"] = $this->input->post("non_member_pw");
+                $data["non_member_pw"] = $this->member_model->makeHashPassword($this->input->post("non_member_pw"));
             }
 
             $this->comment_model->insert("comments", $data);
