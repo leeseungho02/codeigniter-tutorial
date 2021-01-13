@@ -25,6 +25,7 @@ document.querySelectorAll(".commentUpdateLink").forEach(el => {
         const target = e.currentTarget;
         const writer = target.dataset.writer;
         const parent = target.parentElement.parentElement.parentElement;
+        $("#table").val("comments");
 
         if (member) {
             // 해당 작성자 회원인지 체크
@@ -73,6 +74,7 @@ document.querySelectorAll(".commentDeleteLink").forEach(el => {
         const target = e.currentTarget;
         const writer = target.dataset.writer;
         const url = target.dataset.url;
+        $("#table").val("comments");
 
         if (member) {
             // 해당 작성자 회원인지 체크
@@ -103,6 +105,7 @@ function postListClick(e) {
     const target = e.currentTarget;
     const writer = target.dataset.writer;
     const url = target.dataset.url;
+    $("#table").val("posts");
 
     if (member) {
         // 해당 작성자 회원인지 체크

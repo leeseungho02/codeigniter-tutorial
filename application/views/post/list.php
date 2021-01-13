@@ -41,17 +41,22 @@
         <?php foreach ($posts as $key => $post) { ?>
             <tr>
                 <td>
-                    <a href="/index.php/post/view/<?= $post->id ?>"><?= ($currentNumber - $key) ?></a>
+                    <?= ($currentNumber - $key) ?>
                 </td>
                 <td>
-                    <?php for ($i = 0; $i < $post->depth; $i++) {  ?>
-                        &nbsp; RE:
-                    <?php } ?>
-                    <?php if ($post->pdelete) { ?>
-                        삭제된 글입니다.
-                    <?php } else { ?>
-                        <?= $post->title ?>
-                    <?php } ?>
+                    <a href="/index.php/post/view/<?= $post->id ?>" data-url="/index.php/post/view/<?= $post->id ?>" class="<?= $post->type == "private" ? "privateLink" : "" ?>">
+                        <?php for ($i = 0; $i < $post->depth; $i++) {  ?>
+                            &nbsp; RE:
+                        <?php } ?>
+                        <?php if ($post->pdelete) { ?>
+                            삭제된 글입니다.
+                        <?php } else { ?>
+                            <?= $post->title ?>
+                        <?php } ?>
+                        <?php if ($post->type == "private") { ?>
+                            <img src="/assets/images/private_icon.png" alt="" width="25">
+                        <?php } ?>
+                    </a>
                 </td>
                 <td><?= $post->create_dt ?></td>
             </tr>
@@ -62,3 +67,46 @@
 <div class="uk-flex uk-flex-center">
     <?= $this->pagination->create_links(); ?>
 </div>
+
+<div id="modal" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <form>
+            <div class="uk-modal-header">
+                <h2 class="uk-modal-title">비밀글 비밀번호 확인</h2>
+            </div>
+            <div class="uk-modal-body">
+                <input type="hidden" name="table" value="posts">
+                <input type="password" name="pw" id="pw" class="uk-input" value="" placeholder="비밀번호를 입력해주세요.">
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button class="uk-button uk-button-default uk-modal-close" type="button">취소</button>
+                <button class="uk-button uk-button-primary" type="submit">확인</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll(".privateLink").forEach(el => {
+        el.addEventListener("click", (e) => {
+            const target = e.currentTarget;
+            const url = target.dataset.url;
+            e.preventDefault();
+            showModal('#modal');
+            const form = document.querySelector('#modal form');
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                ajax("/index.php/post/writerCheck", "POST", formData, function(data) {
+                    data = JSON.parse(data);
+                    if (data) {
+                        window.location.href = url;
+                    } else {
+                        alert("비밀번호가 틀리셨습니다.");
+                    }
+                });
+            });
+        });
+    });
+</script>

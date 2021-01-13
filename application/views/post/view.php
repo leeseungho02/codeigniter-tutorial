@@ -117,7 +117,7 @@
                 <h2 class="uk-modal-title">비회원 비밀번호 확인</h2>
             </div>
             <div class="uk-modal-body">
-                <input type="hidden" name="table" value="posts">
+                <input type="hidden" name="table" id="table" value="posts">
                 <input type="password" name="pw" id="pw" class="uk-input" value="" placeholder="비밀번호를 입력해주세요.">
             </div>
             <div class="uk-modal-footer uk-text-right">
