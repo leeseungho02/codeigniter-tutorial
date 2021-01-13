@@ -24,31 +24,6 @@ class Post extends common
         $this->upload->initialize(getUploadInit());
     }
 
-    // redirect php vs js
-    // https://www.edureka.co/community/74742/which-is-best-window-location-js-header-php-for-redirection
-    // https://stackoverflow.com/questions/15655017/window-location-js-vs-header-php-for-redirection
-
-    // search
-    // https://stackoverflow.com/questions/14374188/search-data-in-codeigniter
-
-    // pagenation
-    // https://www.guru99.com/codeigniter-pagination.html
-
-    // 2020-01-12 점검 피드백
-    // 회원수정 비밀번호 확인 추가
-    // 글 수정 시 첨부파일 수정
-    // 페이지네이션 수정
-    // 로그인 시 비밀번호 변경 창 발생
-    // 탈퇴한 회원 비밀번호 찾기 가능
-    // 비밀번호 찾기 시 인증 추가
-    // 비밀글 권한 수정
-    // 목록 정렬 수정
-    // 글 작성 시 첨부파일 없을때 오류 수정
-    // 첨부파일 확장자 에러
-    // 글 타입 수정
-    // 글, 댓글 수정, 삭제 권한 처리 수정
-    // 댓글 수정 삭제 시 비밀번호 여부
-
     // 목록
     public function index($page = 0)
     {
@@ -82,6 +57,7 @@ class Post extends common
         $this->form_validation->set_rules("title", "제목", "required");
         $this->form_validation->set_rules("content", "내용", "required");
         $this->form_validation->set_rules("type", "타입", "required");
+        $this->form_validation->set_rules('userFile', 'Document', 'file_selected_check');
         if (!$member) {
             $this->form_validation->set_rules("non_member_id", "비회원 아이디", "required");
             $this->form_validation->set_rules("non_member_pw", "비회원 비밀번호", "required|regex_check");
@@ -128,12 +104,10 @@ class Post extends common
                 );
                 $this->post_model->insert("posts_files", $posts_file);
                 $this->post_model->setMessage('글 작성 하셨습니다.', 'success');
+                movePage("post");
             } else {
-                var_dump($this->upload->display_errors());
-                // $error = array('error' => $this->upload->display_errors());
+                $this->post_model->setMessage($this->upload->display_errors());
             }
-
-            movePage("post");
         }
 
         $this->pageView("post/insert");

@@ -52,9 +52,9 @@
             <div class="uk-margin-bottom">
                 <label class="uk-form-label">첨부파일</label>
                 <div class="uk-form-controls">
-                    <input type="file" name="userFile">
+                    <input type="file" name="userFile" accept="image/*">
                 </div>
-                <?= form_error("file", '<div class="error uk-margin-small-top">', '</div>') ?>
+                <?= form_error("userFile", '<div class="error uk-margin-small-top">', '</div>') ?>
             </div>
 
 

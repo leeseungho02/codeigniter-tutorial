@@ -18,3 +18,10 @@ function getPaginationInit($per_page, $total_rows)
     $config['use_page_numbers'] = TRUE;
     return $config;
 }
+
+function file_selected_check($filename)
+{
+    if (empty($filename)) {
+        return TRUE;
+    }
+}
