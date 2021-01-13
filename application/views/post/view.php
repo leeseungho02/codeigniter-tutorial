@@ -6,6 +6,7 @@
             <small>조회수: <?= $post->hit ?></small>
         </div>
     </div>
+    
     <div class="uk-margin-top">
         <?= $post->content ?>
     </div>
@@ -21,8 +22,8 @@
     <div class="uk-margin-top uk-flex uk-flex-right">
         <a href="/post" class="uk-button uk-button-default uk-margin-right">목록</a>
         <a href="/post/insert/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right">답글작성</a>
-        <a href="#" data-writer="<?= $post->writer ?>" data-url="/post/update/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right postLink">수정</a>
-        <a href="#" data-writer="<?= $post->writer ?>" data-url="/post/delete/<?= $post->id ?>" class="uk-button uk-button-danger postLink">삭제</a>
+        <a href="/post/update/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right">수정</a>
+        <a href="/post/delete/<?= $post->id ?>" class="uk-button uk-button-danger">삭제</a>
     </div>
 </div>
 
@@ -84,9 +85,8 @@
                 </div>
 
                 <div class="uk-margin-top">
-                    <a href="#" class="uk-button uk-button-default uk-margin-right commentUpdateLink" data-writer="<?= $comment->writer ?>">수정</a>
-                    <a href="#" class="uk-button uk-button-danger commentDeleteLink" data-writer="<?= $comment->writer ?>"
-                    data-url="/comment/delete/<?= $comment->id ?>">삭제</a>
+                    <a href="/comment/update/<?= $comment->writer ?>" class="uk-button uk-button-default uk-margin-right commentUpdateLink">수정</a>
+                    <a href="/comment/delete/<?= $comment->writer ?>" class="uk-button uk-button-danger commentDeleteLink">삭제</a>
                 </div>
             </div>
 
