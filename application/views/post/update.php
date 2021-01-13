@@ -35,10 +35,10 @@
             <div class="uk-margin-bottom">
                 <label class="uk-form-label">첨부파일</label>
                 <div class="uk-form-controls" uk-form-custom="target: true">
-                    <input type="file" name="file">
+                    <input type="file" name="userFile" accept="image/*">
                     <input class="uk-input uk-form-width-medium" type="text" placeholder="파일을 선택해주세요." disabled>
                 </div>
-                <?= form_error("file", '<div class="error uk-margin-small-top">', '</div>') ?>
+                <?= form_error("userFile", '<div class="error uk-margin-small-top">', '</div>') ?>
             </div>
 
             <dl class="uk-description-list uk-description-list-divider">

@@ -43,7 +43,7 @@ a {
 }
 
 .message {
-    position: absolute;
+    position: fixed;
     left: 50%;
     transform: translate(-50%);
     transition: opacity .6s, top .6s;

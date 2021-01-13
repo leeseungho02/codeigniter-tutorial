@@ -41,7 +41,7 @@
         <?php foreach ($posts as $key => $post) { ?>
             <tr>
                 <td>
-                    <a href="/index.php/post/view/<?= $post->id ?>"><?= $key + 1 ?></a>
+                    <a href="/index.php/post/view/<?= $post->id ?>"><?= ($currentNumber - $key) ?></a>
                 </td>
                 <td>
                     <?php for ($i = 0; $i < $post->depth; $i++) {  ?>

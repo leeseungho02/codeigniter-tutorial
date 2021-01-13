@@ -23,7 +23,8 @@ class Comment_model extends common_model
     {
         $comment = $this->fetch("comments", array("id" => $id));
         
-        if (!$comment) {
+        if (!$comment || $comment->cdelete) {
+            $this->setMessage("삭제된 댓글이거나 존재하지 않은 댓글입니다.");
             backPage();
         }
 

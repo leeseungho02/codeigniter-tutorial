@@ -46,4 +46,26 @@ class common_model extends CI_Model
         $this->session->set_flashdata('message', $message);
         $this->session->set_flashdata('message_type', $type);
     }
+
+    // 접근 제어
+    function memberAccess($writer)
+    {
+        $message = "해당 작성자만 수정 삭제 가능합니다.";
+        $member = $this->session->userdata('member');
+
+        // 회원 일 때
+        if ($member) {
+            // 해당 작성자 회원인지 체크
+            if ($writer != $member->id) {
+                $this->setMessage($message);
+                backPage();
+            }
+        } else {
+            // 회원이 아닐 때 회원의 글인지 체크
+            if ($writer != 0) {
+                $this->setMessage($message);
+                backPage();
+            }
+        }
+    }
 }

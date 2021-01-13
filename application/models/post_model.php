@@ -21,7 +21,7 @@ class Post_model extends common_model
     }
 
     // 모든 글 가져오기
-    function getPosts($limit, $start, $type = "", $keyword = "")
+    function getPosts($start, $end, $type = "", $keyword = "")
     {
         $this->db->select('*')->from('posts');
 
@@ -29,8 +29,11 @@ class Post_model extends common_model
         if ($type != "" && $keyword != "") {
             $this->db->like($type, $keyword);
         }
+        
+        $this->db->order_by('pid DESC, porder ASC, depth DESC');
+        $this->db->limit($end, $start);
 
-        $query = $this->db->order_by('pid DESC, porder ASC, depth DESC')->limit($limit, $start)->get();
+        $query = $this->db->get();
         return $query->result();
     }
 
@@ -78,21 +81,5 @@ class Post_model extends common_model
         }
 
         return $file;
-    }
-
-    // 접근 제어
-    function memberAccess($post)
-    {
-        $member = $this->session->userdata('member');
-        if ($member) {
-            if ($post->writer != $member->id) {
-                $this->setMessage("해당 작성자만 수정 삭제 가능합니다.");
-                backPage();
-            }
-        }
-    }
-
-    function nonMemberAccess()
-    {
     }
 }

@@ -58,6 +58,9 @@ class Comment extends common
         if ($run) {
             $id = $this->input->post("id");
             $comment = $this->comment_model->getComment($id);
+
+            $this->comment_model->memberAccess($comment->writer);
+
             $data = array(
                 "content" => $this->input->post("content"),
                 "update_dt" => createNow()
@@ -75,6 +78,7 @@ class Comment extends common
     {
         $comment = $this->comment_model->getComment($id);
 
+        $this->comment_model->memberAccess($comment->writer);
         $this->comment_model->update("comments", array("cdelete" => 1), array("id" => $id));
         $this->comment_model->setMessage('해당 댓글 삭제 하셨습니다.', 'success');
 

@@ -6,8 +6,6 @@ require_once(APPPATH . 'controllers/common.php');
 
 class Post extends common
 {
-    private $item = 10;
-
     public function __construct()
     {
         parent::__construct();
@@ -25,10 +23,13 @@ class Post extends common
     }
 
     // 목록
-    public function index($page = 0)
+    public function index($page = 1)
     {
-        $posts = $this->post_model->getPosts($this->item, $page);
+        $item = 10;
+        $start = ($page - 1) * $item;
+        $posts = $this->post_model->getPosts($start, $item);
         $total_count = $this->post_model->getPostsCount();
+        $currentNumber = $total_count - (($page - 1) * $item);
         $keyword = "";
         $type = "title";
         $this->form_validation->set_rules("keyword", "검색어", "required");
@@ -37,14 +38,15 @@ class Post extends common
         if ($run) {
             $type = $this->input->post("type");
             $keyword = $this->input->post("keyword");
-            $posts = $this->post_model->getPosts($this->item, $page, $type, $keyword);
+            $posts = $this->post_model->getPosts($start, $item, $type, $keyword);
             $total_count = $this->post_model->getPostsCount($type, $keyword);
         }
 
+        $datas['currentNumber'] = $currentNumber;
         $datas['keyword'] = $keyword;
         $datas['type'] = $type;
         $datas['posts'] = $posts;
-        $this->pagination->initialize(getPaginationInit($this->item, $total_count));
+        $this->pagination->initialize(getPaginationInit($item, $total_count));
 
         $this->pageView("post/list", $datas);
     }
@@ -57,7 +59,6 @@ class Post extends common
         $this->form_validation->set_rules("title", "제목", "required");
         $this->form_validation->set_rules("content", "내용", "required");
         $this->form_validation->set_rules("type", "타입", "required");
-        $this->form_validation->set_rules('userFile', 'Document', 'file_selected_check');
         if (!$member) {
             $this->form_validation->set_rules("non_member_id", "비회원 아이디", "required");
             $this->form_validation->set_rules("non_member_pw", "비회원 비밀번호", "required|regex_check");
@@ -103,11 +104,15 @@ class Post extends common
                     "pid" => $pid
                 );
                 $this->post_model->insert("posts_files", $posts_file);
-                $this->post_model->setMessage('글 작성 하셨습니다.', 'success');
-                movePage("post");
             } else {
-                $this->post_model->setMessage($this->upload->display_errors());
+                if (!empty($_FILES['userFile']['name'])) {
+                    $this->post_model->setMessage($this->upload->display_errors());
+                    backPage();
+                }
             }
+
+            $this->post_model->setMessage('글 작성 하셨습니다.', 'success');
+            movePage("post");
         }
 
         $this->pageView("post/insert");
@@ -124,10 +129,10 @@ class Post extends common
         $datas['comments'] = $this->comment_model->getComments($id);
 
         // 비밀글 권한
-        if ($datas['post']->type == "private" && $datas['post']->writer != $this->session->userdata('member')->id) {
-            $this->post_model->setMessage('비밀글은 해당 작성자만 읽기가 가능합니다.');
-            backPage();
-        }
+        // if ($datas['post']->type == "private" && $datas['post']->writer != $this->session->userdata('member')->id) {
+        //     $this->post_model->setMessage('비밀글은 해당 작성자만 읽기가 가능합니다.');
+        //     backPage();
+        // }
 
         $this->pageView("post/view", $datas);
     }
@@ -138,6 +143,8 @@ class Post extends common
         $datas['post'] = $this->post_model->getPost($id);
         $datas['files'] = $this->post_model->getPostFiles($id);
 
+        $this->post_model->memberAccess($datas['post']->writer);
+
         $this->form_validation->set_rules("title", "제목", "required");
         $this->form_validation->set_rules("content", "내용", "required");
         $this->form_validation->set_rules("type", "타입", "required");
@@ -146,6 +153,25 @@ class Post extends common
         if ($run) {
             $data = $this->post_model->makePostFromInput($this->input);
             $data["update_dt"] = createNow();
+
+            // 첨부파일 등록 시
+            if ($this->upload->do_upload("userFile")) {
+                $upload_data = $this->upload->data();
+                $posts_file = array(
+                    "name" => $upload_data['file_name'],
+                    "original_name" => $upload_data['orig_name'],
+                    "path" => $upload_data['full_path'],
+                    "size" => $upload_data['file_size'],
+                    "pid" => $id
+                );
+                $this->post_model->insert("posts_files", $posts_file);
+            } else {
+                if (!empty($_FILES['userFile']['name'])) {
+                    $this->post_model->setMessage($this->upload->display_errors());
+                    backPage();
+                }
+            }
+
             $this->post_model->update("posts", $data, array("id" => $id));
             $this->post_model->setMessage('해당 글 수정 하셨습니다.', 'success');
             movePage("post/view/" . $id);
@@ -159,7 +185,9 @@ class Post extends common
     {
         $post = $this->post_model->getPost($id);
 
+        $this->post_model->memberAccess($post->writer);
         $this->post_model->update("posts", array("pdelete" => 1), array("id" => $id));
+        $this->post_model->update("posts_files", array("pfdelete" => 1), array("pid" => $id));
         $this->comment_model->update("comments", array("cdelete" => 1), array("pid" => $id));
         $this->post_model->setMessage('해당 글 삭제 하셨습니다.', 'success');
 

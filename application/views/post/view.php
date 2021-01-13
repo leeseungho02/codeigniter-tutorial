@@ -51,7 +51,7 @@
                 <div class="uk-margin-bottom">
                     <label class="uk-form-label">비회원 비밀번호</label>
                     <div class="uk-form-controls">
-                        <input type="text" name="non_member_pw" id="non_member_pw" placeholder="비회원 비밀번호를 입력해주세요." class="uk-input"></input>
+                        <input type="password" name="non_member_pw" id="non_member_pw" placeholder="비회원 비밀번호를 입력해주세요." class="uk-input"></input>
                         <?= form_error("non_member_pw", '<div class="error uk-margin-small-top">', '</div>') ?>
                     </div>
                 </div>
@@ -108,12 +108,52 @@
 
 </div>
 
+<div id="modal-group-1" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title"></h2>
+        </div>
+        <div class="uk-modal-body">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <a href="#modal-group-2" class="uk-button uk-button-primary" uk-toggle>Next</a>
+        </div>
+    </div>
+</div>
+
 <script>
+    const writer = <?= $post->writer ?>;
+    const member = <?= json_encode($this->session->userdata('member')) ?>;
     document.querySelectorAll(".updateLink").forEach(el => {
         el.addEventListener("click", (e) => {
-            let parent = e.currentTarget.parentElement.parentElement.parentElement;
+            e.preventDefault();
+
+            if (member) {
+                // 해당 작성자 회원인지 체크
+                if (writer != member.id) {
+                    alert("해당 작성자만 수정 삭제 가능합니다.");
+                    return;
+                }
+            } else {
+                // 회원이 아닐 때 비회원의 댓글인지 체크
+                if (writer == 0) {
+                    
+                } else {
+                    alert("해당 작성자만 수정 삭제 가능합니다.");
+                    return;
+                }
+            }
+
+            const parent = e.currentTarget.parentElement.parentElement.parentElement;
             parent.querySelector(".d-none").classList.remove("d-none");
             parent.querySelector(".view").classList.add("d-none");
         });
     });
+
+    function memberCheck() {
+
+    }
 </script>
