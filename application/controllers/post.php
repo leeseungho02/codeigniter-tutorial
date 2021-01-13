@@ -135,12 +135,8 @@ class Post extends common
     // 글 수정
     public function update($id = 0)
     {
-        $post = $this->post_model->getPost($id);
-        $member = $this->session->userdata('member');
-
-        if (!$member || $post->writer != $member->id) {
-            backPage();
-        }
+        $datas['post'] = $this->post_model->getPost($id);
+        $datas['files'] = $this->post_model->getPostFiles($id);
 
         $this->form_validation->set_rules("title", "제목", "required");
         $this->form_validation->set_rules("content", "내용", "required");
@@ -155,23 +151,28 @@ class Post extends common
             movePage("post/view/" . $id);
         }
 
-        $this->pageView("post/update", $post);
+        $this->pageView("post/update", $datas);
     }
 
     // 글 삭제
     public function delete($id = 0)
     {
         $post = $this->post_model->getPost($id);
-        $member = $this->session->userdata('member');
-
-        if (!$member || $post->writer != $member->id) {
-            backPage();
-        }
 
         $this->post_model->update("posts", array("pdelete" => 1), array("id" => $id));
         $this->comment_model->update("comments", array("cdelete" => 1), array("pid" => $id));
         $this->post_model->setMessage('해당 글 삭제 하셨습니다.', 'success');
 
         movePage("post/index");
+    }
+
+    // 파일 삭제
+    public function fileDelete($id = 0)
+    {
+        $file = $this->post_model->getPostFile($id);
+
+        $this->post_model->update("posts_files", array("pfdelete" => 1), array("id" => $file->id));
+
+        backPage();
     }
 }

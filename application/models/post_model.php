@@ -53,6 +53,7 @@ class Post_model extends common_model
         $post = $this->fetch("posts", array("id" => $id));
 
         if (!$post || $post->pdelete) {
+            $this->setMessage("삭제된 글이거나 존재하지 않은 글입니다.");
             movePage("post");
         }
 
@@ -62,7 +63,36 @@ class Post_model extends common_model
     // 해당 글의 모든 첨부파일 가져오기
     function getPostFiles($pid)
     {
-        $query = $this->db->select('*')->from('posts_files')->where(array("pid" => $pid))->get();
+        $query = $this->db->select('*')->from('posts_files')->where(array("pid" => $pid, "pfdelete" => false))->get();
         return $query->result();
+    }
+
+    // 해당 글의 해당 첨부파일 가져오기
+    function getPostFile($id)
+    {
+        $file = $this->fetch("posts_files", array("id" => $id));
+
+        if (!$file) {
+            $this->setMessage("존재하지 않은 첨부파일 입니다.");
+            backPage();
+        }
+
+        return $file;
+    }
+
+    // 접근 제어
+    function memberAccess($post)
+    {
+        $member = $this->session->userdata('member');
+        if ($member) {
+            if ($post->writer != $member->id) {
+                $this->setMessage("해당 작성자만 수정 삭제 가능합니다.");
+                backPage();
+            }
+        }
+    }
+
+    function nonMemberAccess()
+    {
     }
 }
