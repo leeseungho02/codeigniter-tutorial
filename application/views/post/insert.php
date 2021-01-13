@@ -38,7 +38,8 @@
                     <?= form_error("content", '<div class="error uk-margin-small-top">', '</div>') ?>
                 </div>
             </div>
-
+            
+            <?php if ($id == 0) { ?>
             <div class="uk-margin-bottom">
                 <label class="uk-form-label">타입</label>
                 <div class="uk-form-controls">
@@ -48,6 +49,7 @@
                     <?= form_error("type", '<div class="error uk-margin-small-top">', '</div>') ?>
                 </div>
             </div>
+            <?php } ?>
 
             <div class="uk-margin-bottom">
                 <label class="uk-form-label">첨부파일</label>

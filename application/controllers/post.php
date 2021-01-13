@@ -81,6 +81,7 @@ class Post extends common
             if ($id != 0) {
                 $post = $this->post_model->getPost($id);
                 $this->post_model->updatePlus("posts", "porder", array("pid" => $post->pid, "porder >=" => $post->porder + 1));
+                $data['type'] = $post->type;
                 $data["depth"] = $post->depth + 1;
                 $data["porder"] = $post->porder + 1;
                 $data["pid"] = $post->id;
@@ -115,7 +116,8 @@ class Post extends common
             movePage("post");
         }
 
-        $this->pageView("post/insert");
+        $datas['id'] = $id;
+        $this->pageView("post/insert", $datas);
     }
 
     // 글 상세보기
@@ -202,5 +204,15 @@ class Post extends common
         $this->post_model->update("posts_files", array("pfdelete" => 1), array("id" => $file->id));
 
         backPage();
+    }
+
+    // 작성자 처리
+    public function writerCheck()
+    {
+        $table = $this->input->post("table");
+        $pw = $this->input->post("pw");
+        $data = $this->post_model->fetch($table, array("non_member_pw" => $pw));
+        $result = $data ? true : false;
+        echo json_encode( $result );
     }
 }

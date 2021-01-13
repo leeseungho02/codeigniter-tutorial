@@ -21,8 +21,8 @@
     <div class="uk-margin-top uk-flex uk-flex-right">
         <a href="/index.php/post" class="uk-button uk-button-default uk-margin-right">목록</a>
         <a href="/index.php/post/insert/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right">답글작성</a>
-        <a href="/index.php/post/update/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right">수정</a>
-        <a href="/index.php/post/delete/<?= $post->id ?>" class="uk-button uk-button-danger">삭제</a>
+        <a href="#" data-writer="<?= $post->writer ?>" data-url="/index.php/post/update/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right postLink">수정</a>
+        <a href="#" data-writer="<?= $post->writer ?>" data-url="/index.php/post/delete/<?= $post->id ?>" class="uk-button uk-button-danger postLink">삭제</a>
     </div>
 </div>
 
@@ -84,8 +84,9 @@
                 </div>
 
                 <div class="uk-margin-top">
-                    <a href="#" class="uk-button uk-button-default uk-margin-right updateLink">수정</a>
-                    <a href="/index.php/comment/delete/<?= $comment->id ?>" class="uk-button uk-button-danger">삭제</a>
+                    <a href="#" class="uk-button uk-button-default uk-margin-right commentUpdateLink" data-writer="<?= $comment->writer ?>">수정</a>
+                    <a href="#" class="uk-button uk-button-danger commentDeleteLink" data-writer="<?= $comment->writer ?>"
+                    data-url="/index.php/comment/delete/<?= $comment->id ?>">삭제</a>
                 </div>
             </div>
 
@@ -108,52 +109,26 @@
 
 </div>
 
-<div id="modal-group-1" uk-modal>
+<div id="modal" uk-modal>
     <div class="uk-modal-dialog">
         <button class="uk-modal-close-default" type="button" uk-close></button>
-        <div class="uk-modal-header">
-            <h2 class="uk-modal-title"></h2>
-        </div>
-        <div class="uk-modal-body">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        </div>
-        <div class="uk-modal-footer uk-text-right">
-            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
-            <a href="#modal-group-2" class="uk-button uk-button-primary" uk-toggle>Next</a>
-        </div>
+        <form>
+            <div class="uk-modal-header">
+                <h2 class="uk-modal-title">비회원 비밀번호 확인</h2>
+            </div>
+            <div class="uk-modal-body">
+                <input type="hidden" name="table" value="posts">
+                <input type="password" name="pw" id="pw" class="uk-input" value="" placeholder="비밀번호를 입력해주세요.">
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button class="uk-button uk-button-default uk-modal-close" type="button">취소</button>
+                <button class="uk-button uk-button-primary" type="submit">확인</button>
+            </div>
+        </form>
     </div>
 </div>
 
 <script>
-    const writer = <?= $post->writer ?>;
     const member = <?= json_encode($this->session->userdata('member')) ?>;
-    document.querySelectorAll(".updateLink").forEach(el => {
-        el.addEventListener("click", (e) => {
-            e.preventDefault();
-
-            if (member) {
-                // 해당 작성자 회원인지 체크
-                if (writer != member.id) {
-                    alert("해당 작성자만 수정 삭제 가능합니다.");
-                    return;
-                }
-            } else {
-                // 회원이 아닐 때 비회원의 댓글인지 체크
-                if (writer == 0) {
-                    
-                } else {
-                    alert("해당 작성자만 수정 삭제 가능합니다.");
-                    return;
-                }
-            }
-
-            const parent = e.currentTarget.parentElement.parentElement.parentElement;
-            parent.querySelector(".d-none").classList.remove("d-none");
-            parent.querySelector(".view").classList.add("d-none");
-        });
-    });
-
-    function memberCheck() {
-
-    }
 </script>
+<script src="/assets/js/postView.js"></script>
