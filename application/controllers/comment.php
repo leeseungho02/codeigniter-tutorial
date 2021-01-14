@@ -51,7 +51,32 @@ class Comment extends common
     }
 
     // 댓글 수정
-    public function update()
+    public function update($id = 0)
+    {
+        $datas['title'] = "비회원 비밀번호 확인";
+        $datas['comment'] = $this->comment_model->getComment($id);
+        $datas['post'] = (object) array("id" => $datas['comment']->pid);
+
+        $nonMember = $this->comment_model->memberAccess($datas['comment']->writer);
+
+        $this->form_validation->set_rules("pw", "비밀번호", "required");
+
+        $run = $this->form_validation->run();
+        if ($run) {
+            $this->comment_model->writerCheck("comments", $id, $this->input->post("pw"));
+            $datas['title'] = "";
+            $this->pageView("comment/update", $datas);
+        }
+
+        if ($nonMember) {
+            $this->pageView("modal", $datas);
+        } else {
+            $this->pageView("comment/update", $datas);
+        }
+    }
+
+    // 댓글 수정 처리
+    public function updateProccess()
     {
         $this->form_validation->set_rules("content", "내용", "required");
 
@@ -77,12 +102,24 @@ class Comment extends common
     // 댓글 삭제
     public function delete($id = 0)
     {
+        $datas['title'] = "비회원 비밀번호 확인";
         $comment = $this->comment_model->getComment($id);
+        $datas['post'] = (object) array("id" => $comment->pid);
 
-        $this->comment_model->memberAccess($comment->writer);
-        $this->comment_model->update("comments", array("cdelete" => 1), array("id" => $id));
-        $this->comment_model->setMessage('해당 댓글 삭제 하셨습니다.', 'success');
+        $nonMember = $this->comment_model->memberAccess($comment->writer);
 
-        movePage("post/view/" . $comment->pid);
+        $this->form_validation->set_rules("pw", "비밀번호", "required");
+
+        $run = $this->form_validation->run();
+        if ($run) {
+            $this->comment_model->writerCheck("comments", $id, $this->input->post("pw"));
+            $this->comment_model->deleteComment($id, $comment->pid);
+        }
+
+        if ($nonMember) {
+            $this->pageView("modal", $datas);
+        } else {
+            $this->comment_model->deleteComment($id, $comment->pid);
+        }
     }
 }

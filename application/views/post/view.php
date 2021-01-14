@@ -6,20 +6,27 @@
             <small>조회수: <?= $post->hit ?></small>
         </div>
     </div>
-    
+
     <div class="uk-margin-top">
         <?= $post->content ?>
     </div>
 
-    <div>
-        <?php foreach ($files as $key => $file) { ?>
-            <a href="/uploads/<?= $file->name ?>" download="<?= $file->original_name ?>">
-                <img data-src="/uploads/<?= $file->name ?>" alt="a" uk-img>
-            </a>
-        <?php } ?>
-    </div>
+    <?php if (count($files) != 0) { ?>
+        <div class="uk-text-large uk-margin-large-top">첨부파일</div>
 
-    <div class="uk-margin-top uk-flex uk-flex-right">
+        <dl class="uk-description-list uk-description-list-divider">
+            <?php foreach ($files as $key => $file) { ?>
+                <dt class="uk-flex uk-flex-between uk-flex-middle">
+                    <a href="/uploads/<?= $file->name ?>" download="<?= $file->original_name ?>">
+                        <img data-src="/uploads/<?= $file->name ?>" alt="a" width="50" uk-img>
+                        <?= $file->original_name ?>
+                    </a>
+                </dt>
+            <?php } ?>
+        </dl>
+    <?php } ?>
+
+    <div class="uk-margin-large-top uk-flex uk-flex-right">
         <a href="/post" class="uk-button uk-button-default uk-margin-right">목록</a>
         <a href="/post/insert/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right">답글작성</a>
         <a href="/post/update/<?= $post->id ?>" class="uk-button uk-button-default uk-margin-right">수정</a>
@@ -85,50 +92,12 @@
                 </div>
 
                 <div class="uk-margin-top">
-                    <a href="/comment/update/<?= $comment->writer ?>" class="uk-button uk-button-default uk-margin-right commentUpdateLink">수정</a>
-                    <a href="/comment/delete/<?= $comment->writer ?>" class="uk-button uk-button-danger commentDeleteLink">삭제</a>
+                    <a href="/comment/update/<?= $comment->id ?>" class="uk-button uk-button-default uk-margin-right">수정</a>
+                    <a href="/comment/delete/<?= $comment->id ?>" class="uk-button uk-button-danger">삭제</a>
                 </div>
             </div>
-
-            <form action="/comment/update" method="POST" class="form uk-form-stacked d-none">
-                <input type="hidden" name="id" value="<?= $comment->id ?>">
-                <div class="uk-margin-bottom">
-                    <label class="uk-form-label">내용</label>
-                    <div class="uk-form-controls">
-                        <input type="text" name="content" id="content" class="uk-input" value="<?= $comment->content ?>">
-                        <?= form_error("content", '<div class="error uk-margin-small-top">', '</div>') ?>
-                    </div>
-                </div>
-                <div class="uk-flex uk-flex-right uk-flex-middle">
-                    <button type="submit" class="uk-button uk-button-default">글 수정</button>
-                </div>
-            </form>
 
         </article>
     <?php } ?>
 
 </div>
-
-<div id="modal" uk-modal>
-    <div class="uk-modal-dialog">
-        <button class="uk-modal-close-default" type="button" uk-close></button>
-        <form>
-            <div class="uk-modal-header">
-                <h2 class="uk-modal-title">비회원 비밀번호 확인</h2>
-            </div>
-            <div class="uk-modal-body">
-                <input type="hidden" name="table" id="table" value="posts">
-                <input type="password" name="pw" id="pw" class="uk-input" value="" placeholder="비밀번호를 입력해주세요.">
-            </div>
-            <div class="uk-modal-footer uk-text-right">
-                <button class="uk-button uk-button-default uk-modal-close" type="button">취소</button>
-                <button class="uk-button uk-button-primary" type="submit">확인</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-    const member = <?= json_encode($this->session->userdata('member')) ?>;
-</script>
-<script src="/assets/js/postView.js"></script>

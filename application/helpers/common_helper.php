@@ -19,3 +19,15 @@ function createNow()
 {
     return date('Y-m-d H:i:s');
 }
+
+// 팝업 설정
+function modalInit($datas, $check = false, $title = "")
+{
+    if ($title != "") {
+        $datas['title'] = $title;
+    }
+
+    $datas['check'] = $check;
+    
+    return $datas;
+}

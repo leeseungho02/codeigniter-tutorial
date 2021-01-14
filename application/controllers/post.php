@@ -59,7 +59,9 @@ class Post extends common
 
         $this->form_validation->set_rules("title", "제목", "required");
         $this->form_validation->set_rules("content", "내용", "required");
-        $this->form_validation->set_rules("type", "타입", "required");
+        if ($id == 0) {
+            $this->form_validation->set_rules("type", "타입", "required");
+        }
         if (!$member) {
             $this->form_validation->set_rules("non_member_id", "비회원 아이디", "required");
             $this->form_validation->set_rules("non_member_pw", "비회원 비밀번호", "required|regex_check");
@@ -131,25 +133,70 @@ class Post extends common
         $datas['files'] = $this->post_model->getPostFiles($id);
         $datas['comments'] = $this->comment_model->getComments($id);
 
-        $this->pageView("post/view", $datas);
+        if ($datas['post']->type == "private") {
+            $datas['title'] = "비밀글 비밀번호 확인";
+            $datas['list'] = true;
+
+            $this->form_validation->set_rules("pw", "비밀번호", "required");
+
+            $run = $this->form_validation->run();
+            if ($run) {
+                $this->post_model->writerCheck("posts", $id, $this->input->post("pw"));
+                $datas['title'] = "";
+                $this->pageView("post/view", $datas);
+            } else {
+                $this->pageView("modal", $datas);
+            }
+        } else {
+            $this->pageView("post/view", $datas);
+        }
     }
 
     // 글 수정
     public function update($id = 0)
     {
+        $datas['title'] = "비회원 비밀번호 확인";
         $datas['post'] = $this->post_model->getPost($id);
         $datas['files'] = $this->post_model->getPostFiles($id);
 
-        $this->post_model->memberAccess($datas['post']->writer);
+        $nonMember = $this->post_model->memberAccess($datas['post']->writer);
 
+        $this->form_validation->set_rules("pw", "비밀번호", "required");
+
+        $run = $this->form_validation->run();
+        if ($run) {
+            $this->post_model->writerCheck("posts", $id, $this->input->post("pw"));
+            $datas['title'] = "";
+            $this->pageView("post/update", $datas);
+        }
+
+        if ($nonMember) {
+            $this->pageView("modal", $datas);
+        } else {
+            $this->pageView("post/update", $datas);
+        }
+    }
+
+    // 글 수정 처리
+    public function updateProccess()
+    {
         $this->form_validation->set_rules("title", "제목", "required");
         $this->form_validation->set_rules("content", "내용", "required");
         $this->form_validation->set_rules("type", "타입", "required");
 
         $run = $this->form_validation->run();
         if ($run) {
+            $id = $this->input->post("id");
+            $deleteFiles = json_decode($this->input->post("deleteFiles"));
             $data = $this->post_model->makePostFromInput($this->input);
             $data["update_dt"] = createNow();
+
+            // 첨부파일 삭제 시
+            if (count($deleteFiles) != 0) {
+                foreach ($deleteFiles as $key => $fid) {
+                    $this->post_model->update("posts_files", array("pfdelete" => 1), array("id" => $fid));
+                }
+            }
 
             // 첨부파일 등록 시
             if ($this->upload->do_upload("userFile")) {
@@ -171,43 +218,31 @@ class Post extends common
 
             $this->post_model->update("posts", $data, array("id" => $id));
             $this->post_model->setMessage('해당 글 수정 하셨습니다.', 'success');
+
             movePage("post/view/" . $id);
         }
-
-        $this->pageView("post/update", $datas);
     }
 
     // 글 삭제
     public function delete($id = 0)
     {
-        $post = $this->post_model->getPost($id);
+        $datas['title'] = "비회원 비밀번호 확인";
+        $datas['post'] = $this->post_model->getPost($id);
 
-        $this->post_model->memberAccess($post->writer);
-        $this->post_model->update("posts", array("pdelete" => 1), array("id" => $id));
-        $this->post_model->update("posts_files", array("pfdelete" => 1), array("pid" => $id));
-        $this->comment_model->update("comments", array("cdelete" => 1), array("pid" => $id));
-        $this->post_model->setMessage('해당 글 삭제 하셨습니다.', 'success');
+        $nonMember = $this->post_model->memberAccess($datas['post']->writer);
 
-        movePage("post/index");
-    }
+        $this->form_validation->set_rules("pw", "비밀번호", "required");
 
-    // 파일 삭제
-    public function fileDelete($id = 0)
-    {
-        $file = $this->post_model->getPostFile($id);
+        $run = $this->form_validation->run();
+        if ($run) {
+            $this->post_model->writerCheck("posts", $id, $this->input->post("pw"));
+            $this->post_model->deletePost($id);
+        }
 
-        $this->post_model->update("posts_files", array("pfdelete" => 1), array("id" => $file->id));
-
-        backPage();
-    }
-
-    // 작성자 처리
-    public function writerCheck()
-    {
-        $table = $this->input->post("table");
-        $pw = $this->input->post("pw");
-        $data = $this->post_model->fetch($table, array("non_member_pw" => $pw));
-        $result = $data ? true : false;
-        echo json_encode( $result );
+        if ($nonMember) {
+            $this->pageView("modal", $datas);
+        } else {
+            $this->post_model->deletePost($id);
+        }
     }
 }

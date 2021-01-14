@@ -23,13 +23,13 @@ class Post_model extends common_model
     // 모든 글 가져오기
     function getPosts($start, $end, $type = "", $keyword = "")
     {
-        $this->db->select('*')->from('posts');
+        $this->db->select('*')->from('posts')->where(array("pdelete" => false));
 
         // 검색어가 있을 때
         if ($type != "" && $keyword != "") {
             $this->db->like($type, $keyword);
         }
-        
+
         $this->db->order_by('pid DESC, porder ASC, depth DESC');
         $this->db->limit($end, $start);
 
@@ -40,7 +40,7 @@ class Post_model extends common_model
     // 삭제되지 않은 모든 글 갯수
     function getPostsCount($type = "", $keyword = "")
     {
-        $this->db->select('*')->from('posts');
+        $this->db->select('*')->from('posts')->where(array("pdelete" => false));
 
         // 검색어가 있을 때
         if ($type != "" && $keyword != "") {
@@ -81,5 +81,15 @@ class Post_model extends common_model
         }
 
         return $file;
+    }
+
+    // 글 삭제
+    function deletePost($id)
+    {
+        $this->update("posts", array("pdelete" => 1), array("id" => $id));
+        $this->update("posts_files", array("pfdelete" => 1), array("pid" => $id));
+        $this->update("comments", array("cdelete" => 1), array("pid" => $id));
+        $this->setMessage('해당 글 삭제 하셨습니다.', 'success');
+        movePage("post/index");
     }
 }

@@ -50,15 +50,17 @@ class common_model extends CI_Model
     // 접근 제어
     function memberAccess($writer)
     {
-        $message = "해당 작성자만 수정 삭제 가능합니다.";
+        $message = "해당 작성자만 수정 또는 삭제 가능합니다.";
         $member = $this->session->userdata('member');
-
+        $nonMember = true;
         // 회원 일 때
         if ($member) {
             // 해당 작성자 회원인지 체크
             if ($writer != $member->id) {
                 $this->setMessage($message);
                 backPage();
+            } else {
+                $nonMember = false;
             }
         } else {
             // 회원이 아닐 때 회원의 글인지 체크
@@ -66,6 +68,37 @@ class common_model extends CI_Model
                 $this->setMessage($message);
                 backPage();
             }
+        }
+
+        return $nonMember;
+    }
+
+    // 암호화 비밀번호 생성
+    function makeHashPassword($password)
+    {
+        return password_hash($password, PASSWORD_BCRYPT);
+    }
+
+    // 마지막 쿼리문 보기
+    function lastQuery()
+    {
+        return $this->db->last_query();
+    }
+
+    // 작성자 체크
+    function writerCheck($table, $id, $pw)
+    {
+        $data = $this->fetch($table, array("id" => $id));
+        $checkPW = $data->non_member_pw;
+
+        if ($data->writer != 0) {
+            $member = $this->fetch("members", array("id" => $data->writer));
+            $checkPW = $member->pw;
+        }
+
+        if (!password_verify($pw, $checkPW)) {
+            $this->setMessage("비밀번호가 일치하지 않습니다.");
+            backPage();
         }
     }
 }

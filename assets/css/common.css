@@ -44,6 +44,7 @@ a {
 
 .message {
     position: fixed;
+    z-index: 1000000;
     left: 50%;
     transform: translate(-50%);
     transition: opacity .6s, top .6s;

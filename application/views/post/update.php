@@ -2,7 +2,9 @@
 
 <div class="parentForm">
 
-    <form method="POST" class="form uk-form-stacked" enctype="multipart/form-data">
+    <form action="/post/updateProccess" method="POST" class="form uk-form-stacked" enctype="multipart/form-data">
+        
+        <input type="hidden" name="id" value="<?= $post->id ?>">
 
         <div>
 
@@ -41,20 +43,21 @@
                 <?= form_error("userFile", '<div class="error uk-margin-small-top">', '</div>') ?>
             </div>
 
+            <input type="hidden" name="deleteFiles" id="deleteFileInput" value="">
+
             <dl class="uk-description-list uk-description-list-divider">
                 <?php foreach ($files as $key => $file) { ?>
                     <dt class="uk-flex uk-flex-between uk-flex-middle">
                         <?= $file->original_name ?>
-                        <a href="/post/fileDelete/<?= $file->id ?>" class="uk-button uk-button-default">삭제</a>
+                        <a href="#" data-id="<?= $file->id ?>" class="uk-button uk-button-default deleteFileBtn">삭제</a>
                     </dt>
                 <?php } ?>
             </dl>
 
-
         </div>
 
         <div class="uk-flex uk-flex-right uk-flex-middle uk-margin-top">
-            <button type="reset" class="uk-button uk-button-default uk-margin-right">초기화</button>
+            <button type="button" class="uk-button uk-button-default uk-margin-right" onclick="location.reload();">초기화</button>
             <button type="submit" class="uk-button uk-button-default">글 수정</button>
         </div>
 
@@ -62,7 +65,4 @@
 
 </div>
 
-<script>
-    createModal("비회원 비밀번호 확인", "posts");
-    showModal('#modal');
-</script>
+<script src="/assets/js/post/update.js"></script>

@@ -45,7 +45,7 @@
                         <?= ($currentNumber - $key) ?>
                     </td>
                     <td>
-                        <a href="/post/view/<?= $post->id ?>" data-url="/post/view/<?= $post->id ?>" class="<?= $post->type == "private" ? "privateLink" : "" ?>">
+                        <a href="/post/view/<?= $post->id ?>">
                             <?php for ($i = 0; $i < $post->depth; $i++) {  ?>
                                 &nbsp; RE:
                             <?php } ?>
@@ -88,27 +88,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    document.querySelectorAll(".privateLink").forEach(el => {
-        el.addEventListener("click", (e) => {
-            const target = e.currentTarget;
-            const url = target.dataset.url;
-            e.preventDefault();
-            showModal('#modal');
-            const form = document.querySelector('#modal form');
-            form.addEventListener("submit", (e) => {
-                e.preventDefault();
-                const formData = new FormData(form);
-                ajax("/post/writerCheck", "POST", formData, function(data) {
-                    data = JSON.parse(data);
-                    if (data) {
-                        window.location.href = url;
-                    } else {
-                        alert("비밀번호가 틀리셨습니다.");
-                    }
-                });
-            });
-        });
-    });
-</script>

@@ -39,14 +39,8 @@ class Member_model extends common_model
         return $member;
     }
 
-    // 암호화 비밀번호 생성
-    function makeHashPassword($password)
-    {
-        return password_hash($password, PASSWORD_BCRYPT);
-    }
-
     // 회원가입 데이터 생성
-    function makeMemberFromInput($input)
+    function makeMemberFromInput($input, $start = null, $end = null)
     {
         $member = array(
             'email' => $input->post("email"),
@@ -57,6 +51,11 @@ class Member_model extends common_model
             'postcodify_details' => $input->post("postcodify_details"),
             'postcodify_extra_info' => $input->post("postcodify_extra_info")
         );
+
+        if (!is_null($start) && !is_null($end)) {
+            array_splice($member, $start, $end);
+        }
+
         return $member;
     }
 }

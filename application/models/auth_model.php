@@ -37,12 +37,7 @@ class auth_model extends common_model
     function getCode($code)
     {
         $auth = $this->fetch("authInfo", array('code' => $code));
-
-        // if (!$auth) {
-        //     $this->setMessage('인증번호가 일치하지 않습니다.');
-        //     backPage();
-        // }
-
+        // 시간처리
         return $auth;
     }
 
