@@ -970,7 +970,7 @@ class CI_Loader {
 		}
 		else
 		{
-			include($_ci_path); // include() vs include_once() allows for multiple views with the same name
+			include_once($_ci_path); // include() vs include_once() allows for multiple views with the same name
 		}
 
 		log_message('info', 'File loaded: '.$_ci_path);
