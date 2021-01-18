@@ -14,7 +14,7 @@ class auth_model extends common_model
     {
         $code = $this->createCode(5);
         while (true) {
-            $prevCode = $this->getCode($code);
+            $prevCode = $this->fetch("authInfo", array('code' => $code));
             if (!$prevCode) {
                 return $code;
                 break;
@@ -37,8 +37,12 @@ class auth_model extends common_model
     function getCode($code)
     {
         $auth = $this->fetch("authInfo", array('code' => $code));
-        // 시간처리
-        return $auth;
+        $create_dt = date("Y-m-d h:i:s", strtotime($auth->create_dt . "+" . $auth->time . " seconds"));
+        $now_dt = date("Y-m-d h:i:s");
+
+        if ($create_dt >= $now_dt) {
+            return $auth;
+        }
     }
 
     function makeCodeData($issu, $uid)

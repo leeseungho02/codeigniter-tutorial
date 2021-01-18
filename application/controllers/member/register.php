@@ -43,7 +43,7 @@ class Register extends common
 
 		$this->pageView('member/register');
 	}
-
+	
 	public function auth($type = "")
 	{
 		$this->form_validation->set_rules('code', '인증번호', 'required');
@@ -52,8 +52,8 @@ class Register extends common
 		if ($run) {
 			$auth = $this->auth_model->getCode($this->input->post("code"));
 			if (!$auth) {
-				$this->member_model->setMessage('인증번호가 일치하지 않습니다.');
-				backPage();
+				$this->member_model->setMessage('인증번호가 유효하지 않습니다.');
+				backPage();	
 			}
 
 			$this->auth_model->setMessage('인증 하셨습니다.', 'success');
