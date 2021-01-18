@@ -14,6 +14,8 @@ class Login extends common
 
 		$this->load->model('member_model');
 		$this->load->model('auth_model');
+
+		$this->load->helper('regex');
 	}
 
 	public function view()
@@ -65,7 +67,8 @@ class Login extends common
 	{
 		$member = $this->member_model->getMember(array("id" => $uid));
 
-		$this->form_validation->set_rules('pw', '새 비밀번호', 'required');
+		$this->form_validation->set_rules('pw', '새 비밀번호', 'required|regex_check');
+		$this->form_validation->set_message('regex_check', '영문 대소문자, 숫자, 특수문자 중 2종류 조합 8글자이상 20글자이하');
 		$this->form_validation->set_rules('pw_check', '새 비밀번호 확인', 'required|matches[pw]');
 
 		$run = $this->form_validation->run();
